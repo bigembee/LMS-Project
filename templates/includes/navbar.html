@@ -1,0 +1,47 @@
+<!--
+navbar.html - The navigation bar shown at the top of every page.
+
+This is INCLUDED in base.html via {% include "includes/navbar.html" %}
+It's a separate file so the base template stays clean and the navbar can be edited independently.
+
+TEMPLATE TAGS USED:
+    {% load static %}               → enables {% static %} for image/CSS links
+    {% load core_tags %}            → loads our custom template filters (has_role)
+    {% if user.is_authenticated %}  → checks if a user is logged in
+    {% url 'app:name' %}            → generates a URL from a named URL pattern
+    {{ user.get_full_name }}        → outputs the user's full name
+
+NOTE: "user" is available in ALL templates automatically because of the
+"django.contrib.auth.context_processors.auth" context processor in settings.py.
+-->
+{% load static %}
+{% load core_tags %}
+
+<nav class="navbar">
+    <div class="navbar-brand">
+        <!-- Link to the home page -->
+        <a href="/">LMS</a>
+    </div>
+    <div class="navbar-menu">
+        {% if user.is_authenticated %}
+            <!-- Logged-in users see these links -->
+
+            <!-- Dashboard link — redirects to the role-specific dashboard -->
+            <a href="{% url 'accounts:dashboard_redirect' %}">Dashboard</a>
+
+            <!-- Communication links -->
+            <a href="{% url 'communication:announcement_list' %}">Announcements</a>
+            <a href="{% url 'communication:notification_list' %}">Notifications</a>
+
+            <!-- User's name — links to their profile -->
+            <a href="{% url 'accounts:profile' %}">{{ user.get_full_name }}</a>
+
+            <!-- Logout link -->
+            <a href="{% url 'accounts:logout' %}">Logout</a>
+        {% else %}
+            <!-- Anonymous (not logged in) users see these links -->
+            <a href="{% url 'accounts:login' %}">Login</a>
+            <a href="{% url 'accounts:register' %}">Register</a>
+        {% endif %}
+    </div>
+</nav>

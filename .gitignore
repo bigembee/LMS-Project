@@ -1,0 +1,55 @@
+# =============================================================================
+# .gitignore - Tells Git which files/folders to IGNORE (not track).
+#
+# WHY?
+#   - Some files are auto-generated (no need to share them)
+#   - Some files contain secrets (.env with passwords)
+#   - Some files are huge (node_modules, virtual environments)
+#
+# HOW IT WORKS:
+#   - Each line is a pattern. Files matching that pattern won't be committed.
+#   - "*.py[cod]" means any .pyc, .pyo, or .pyd file
+#   - "folder/" means ignore the entire folder
+#   - "#" lines are comments
+# =============================================================================
+
+# --- Python ---
+__pycache__/        # Python's compiled bytecode cache — auto-generated, not needed in git
+*.py[cod]           # .pyc (compiled), .pyo (optimized), .pyd (Windows DLL) files
+*.egg-info/         # Package metadata created by setuptools
+dist/               # Built distribution packages
+build/              # Build artifacts
+*.egg               # Python egg packages
+
+# --- Virtual Environment ---
+venv/               # Common virtual environment folder names
+env/                # Any of these could be your virtualenv
+.venv/              # Don't commit 500MB+ of installed packages!
+
+# --- Django ---
+*.sqlite3           # SQLite database files — each developer has their own local DB
+db.sqlite3          # The default Django database filename
+media/              # User-uploaded files (profile pics, assignment submissions)
+staticfiles/        # Collected static files for production (output of collectstatic)
+
+# --- Environment / Secrets ---
+.env                # Contains SECRET_KEY, DB passwords, API keys — NEVER commit this!
+
+# --- IDE / Editor ---
+.vscode/            # VS Code settings (personal to each developer)
+.idea/              # PyCharm/IntelliJ settings
+*.swp               # Vim swap files
+*.swo               # Vim swap files
+
+# --- Operating System ---
+.DS_Store           # macOS folder metadata
+Thumbs.db           # Windows image cache
+
+# --- Testing ---
+.coverage           # Coverage data file
+htmlcov/            # HTML coverage report
+.pytest_cache/      # Pytest's cache directory
+
+# --- Node.js (if React is added later) ---
+node_modules/       # JavaScript dependencies — like venv but for JS
+package-lock.json   # Lockfile for npm

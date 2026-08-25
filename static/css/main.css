@@ -1,0 +1,135 @@
+/* =============================================================================
+   main.css - Global styles for the LMS project.
+
+   HOW CSS WORKS IN DJANGO:
+     1. CSS files live in the static/ folder (or each app's static/ folder)
+     2. Templates reference them with: {% static 'css/main.css' %}
+     3. In development, Django serves them automatically
+     4. In production, run "python manage.py collectstatic" to gather all static files
+
+   CSS VARIABLES:
+     The :root section defines "CSS custom properties" (variables).
+     You can use them anywhere: color: var(--primary);
+     Changing the variable value here changes it EVERYWHERE it's used.
+   ============================================================================= */
+
+/* --- CSS Variables (Design Tokens) --- */
+/* Define colors and sizes in one place — change here, changes everywhere */
+:root {
+    --primary: #2563eb;        /* Main brand color (blue) — used for links, buttons, accents */
+    --primary-dark: #1d4ed8;   /* Darker shade — used for hover states */
+    --secondary: #64748b;      /* Secondary color (grey) — used for less important text */
+    --success: #16a34a;        /* Green — used for success messages, active states */
+    --danger: #dc2626;         /* Red — used for errors, delete buttons, warnings */
+    --warning: #d97706;        /* Orange — used for warning messages */
+    --bg: #f8fafc;             /* Page background color (light grey) */
+    --surface: #ffffff;        /* Card/panel background (white) */
+    --text: #1e293b;           /* Main text color (dark grey, almost black) */
+    --text-muted: #64748b;     /* Muted text color (lighter grey) — for captions, timestamps */
+    --border: #e2e8f0;         /* Border color (very light grey) */
+    --radius: 8px;             /* Border radius for rounded corners */
+}
+
+/* --- Reset / Base Styles --- */
+/* Remove default browser margins and padding, use consistent box model */
+* {
+    margin: 0;
+    padding: 0;
+    /* border-box means: width includes padding and border, not just content */
+    /* Without this: a 200px wide box with 20px padding would be 240px total */
+    /* With this: a 200px wide box with 20px padding stays 200px total */
+    box-sizing: border-box;
+}
+
+/* Base body styles — applied to the entire page */
+body {
+    /* Font stack: try system fonts first (fast, no download needed) */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.6;  /* Space between lines — 1.6x the font size for readability */
+}
+
+/* --- Container --- */
+/* Centers content and limits width — prevents text from stretching across wide screens */
+.container {
+    max-width: 1200px;      /* Content won't exceed 1200px wide */
+    margin: 0 auto;         /* Center horizontally (auto left/right margins) */
+    padding: 20px;          /* Space between content and edges */
+}
+
+/* --- Navbar --- */
+/* The navigation bar at the top of every page */
+.navbar {
+    background: var(--surface);                /* White background */
+    border-bottom: 1px solid var(--border);    /* Subtle bottom border */
+    padding: 12px 24px;                        /* Internal spacing */
+    display: flex;                             /* Flexbox: items arrange in a row */
+    justify-content: space-between;            /* Brand on left, links on right */
+    align-items: center;                       /* Vertically center items */
+}
+
+.navbar-brand a {
+    font-size: 1.5rem;          /* 1.5x the base font size */
+    font-weight: 700;           /* Bold */
+    color: var(--primary);      /* Blue brand color */
+    text-decoration: none;      /* No underline */
+}
+
+.navbar-menu a {
+    color: var(--text);
+    text-decoration: none;
+    margin-left: 20px;          /* Space between each nav link */
+    font-size: 0.9rem;
+}
+
+/* :hover = when the mouse cursor is over the element */
+.navbar-menu a:hover {
+    color: var(--primary);      /* Turn blue on hover */
+}
+
+/* --- Sidebar --- */
+/* Vertical navigation menu on the left side of dashboard pages */
+.sidebar {
+    width: 240px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 20px 0;
+    min-height: calc(100vh - 60px);  /* Full height minus navbar (calc does math in CSS) */
+}
+
+.sidebar a {
+    display: block;             /* Each link takes the full width (stacked vertically) */
+    padding: 10px 24px;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    background: var(--bg);      /* Light grey background on hover */
+    color: var(--primary);
+}
+
+/* --- Alert Messages --- */
+/* Flash messages: success, error, warning, info */
+.alert {
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+}
+
+/* Each alert type has a different background color and text color */
+.alert-success { background: #f0fdf4; color: var(--success); border: 1px solid #bbf7d0; }
+.alert-error   { background: #fef2f2; color: var(--danger);  border: 1px solid #fecaca; }
+.alert-warning { background: #fffbeb; color: var(--warning); border: 1px solid #fde68a; }
+.alert-info    { background: #eff6ff; color: var(--primary); border: 1px solid #bfdbfe; }
+
+/* --- Footer --- */
+.footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+}

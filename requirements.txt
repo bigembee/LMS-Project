@@ -1,0 +1,45 @@
+# =============================================================================
+# requirements.txt - Lists all Python packages this project needs.
+#
+# HOW TO USE:
+#   1. Create a virtual environment:  python -m venv venv
+#   2. Activate it:                   venv\Scripts\activate  (Windows)
+#                                     source venv/bin/activate  (Mac/Linux)
+#   3. Install everything:            pip install -r requirements.txt
+#
+# The ">=" means "this version or newer". The "<5.0" means "but not version 5".
+# This ensures compatibility — we want Django 4.x, not a potentially breaking 5.x.
+# =============================================================================
+
+# --- Core Framework ---
+Django>=4.2,<5.0                    # The web framework — handles URLs, views, templates, ORM, admin panel
+djangorestframework>=3.14           # DRF — adds REST API support (serializers, viewsets, API views)
+django-cors-headers>=4.3            # Allows frontend apps (React) on different domains to call our API
+django-filter>=23.5                 # Adds filtering to DRF — e.g. /api/courses/?department=CS
+
+# --- Database ---
+psycopg2-binary>=2.9                # PostgreSQL adapter — needed if you switch from SQLite to PostgreSQL
+
+# --- Authentication ---
+djangorestframework-simplejwt>=5.3  # JWT tokens for API authentication (login returns a token, not a session)
+django-allauth>=0.61                # Social auth + email verification + account management
+
+# --- File Handling ---
+Pillow>=10.2                        # Image processing library — required for Django's ImageField
+
+# --- Environment / Config ---
+python-decouple>=3.8                # Reads settings from .env file — keeps secrets out of code
+
+# --- Development Tools ---
+django-debug-toolbar>=4.2           # Shows SQL queries, request info in browser during development
+django-extensions>=3.2              # Extra management commands like shell_plus, show_urls
+
+# --- Testing ---
+pytest>=8.0                         # Test runner — more powerful than Django's built-in test runner
+pytest-django>=4.7                  # Integrates pytest with Django (knows about models, views, etc.)
+factory-boy>=3.3                    # Creates fake test data — e.g. UserFactory() makes a test user
+coverage>=7.4                       # Measures how much of your code is covered by tests
+
+# --- Deployment ---
+gunicorn>=21.2                      # Production web server — replaces "runserver" in production
+whitenoise>=6.6                     # Serves static files (CSS/JS) efficiently in production

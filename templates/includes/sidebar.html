@@ -1,0 +1,59 @@
+<!--
+sidebar.html - Role-specific sidebar navigation.
+
+Shows different menu items depending on the user's role.
+Uses the custom "has_role" template filter from core_tags.py.
+
+HOW TO INCLUDE THIS IN A PAGE:
+    {% extends "base.html" %}
+    {% block content %}
+        <div class="page-with-sidebar">
+            {% include "includes/sidebar.html" %}
+            <main>
+                ... page content ...
+            </main>
+        </div>
+    {% endblock %}
+
+THE has_role FILTER:
+    {% if user|has_role:"student" %}
+        ^^^^ ^^^^^^^^   ^^^^^^^
+        value  filter    argument
+
+    This calls: has_role(user, "student") from core_tags.py
+    Returns True if user.role == "student"
+-->
+{% load core_tags %}
+
+<aside class="sidebar">
+    <!-- STUDENT SIDEBAR — only shown to users with role="student" -->
+    {% if user|has_role:"student" %}
+        <a href="{% url 'students:dashboard' %}">Dashboard</a>
+        <a href="{% url 'students:my_courses' %}">My Courses</a>
+        <a href="{% url 'students:timetable' %}">Timetable</a>
+        <a href="{% url 'students:my_assignments' %}">Assignments</a>
+        <a href="{% url 'students:my_grades' %}">Grades</a>
+        <a href="{% url 'students:gpa' %}">GPA</a>
+
+    <!-- LECTURER SIDEBAR — only shown to users with role="lecturer" -->
+    {% elif user|has_role:"lecturer" %}
+        <a href="{% url 'lecturers:dashboard' %}">Dashboard</a>
+        <a href="{% url 'lecturers:my_courses' %}">My Courses</a>
+        <a href="{% url 'lecturers:create_assignment' %}">Create Assignment</a>
+        <a href="{% url 'lecturers:post_announcement' %}">Post Announcement</a>
+
+    <!-- ADMIN SIDEBAR — only shown to users with role="admin" -->
+    {% elif user|has_role:"admin" %}
+        <a href="{% url 'administration:dashboard' %}">Dashboard</a>
+        <a href="{% url 'administration:manage_students' %}">Students</a>
+        <a href="{% url 'administration:manage_lecturers' %}">Lecturers</a>
+        <a href="{% url 'administration:manage_departments' %}">Departments</a>
+        <a href="{% url 'administration:manage_courses' %}">Courses</a>
+        <a href="{% url 'administration:manage_enrollments' %}">Enrollments</a>
+        <a href="{% url 'administration:manage_sessions' %}">Sessions</a>
+        <a href="{% url 'administration:analytics' %}">Analytics</a>
+    {% endif %}
+
+    <!-- Messages link — shown to ALL roles -->
+    <a href="{% url 'communication:inbox' %}">Messages</a>
+</aside>

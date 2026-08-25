@@ -1,0 +1,21 @@
+<!--
+404.html - "Page Not Found" error page.
+
+Django shows this when a user visits a URL that doesn't match any pattern.
+e.g., visiting /nonexistent-page/ would show this.
+
+In development (DEBUG=True), Django shows its own detailed 404 page.
+In production (DEBUG=False), Django shows THIS page instead.
+
+To tell Django to use this file, set in settings.py (already handled by templates DIRS):
+    The template must be named "404.html" in one of the template directories.
+-->
+{% extends "base.html" %}
+
+{% block title %}404 - Page Not Found{% endblock %}
+
+{% block content %}
+<h1>404 - Page Not Found</h1>
+<p>The page you're looking for doesn't exist.</p>
+<a href="/">Go Home</a>
+{% endblock %}

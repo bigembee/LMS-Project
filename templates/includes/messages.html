@@ -1,0 +1,38 @@
+<!--
+messages.html - Flash message display.
+
+WHAT ARE FLASH MESSAGES?
+    Flash messages are one-time notifications that appear after an action:
+        - "Registration successful!" (success)
+        - "Invalid username or password" (error)
+        - "Your session will expire in 5 minutes" (warning)
+
+    They're called "flash" because they appear once and then disappear.
+
+HOW THEY'RE CREATED (in views.py):
+    from django.contrib import messages
+    messages.success(request, "Course registered successfully!")
+    messages.error(request, "This course is already full.")
+    messages.warning(request, "Your assignment is due tomorrow.")
+    messages.info(request, "A new announcement has been posted.")
+
+HOW THEY'RE DISPLAYED:
+    The "messages" variable is available in ALL templates because of the
+    "django.contrib.messages.context_processors.messages" context processor in settings.py.
+
+    Each message has a "tags" attribute that contains the message level:
+    "success", "error", "warning", "info" — we use these as CSS class names.
+
+    The JavaScript in main.js auto-dismisses these after 5 seconds.
+-->
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <!-- message.tags = "success", "error", "warning", or "info" -->
+    <!-- This becomes class="alert alert-success" or class="alert alert-error" etc. -->
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}

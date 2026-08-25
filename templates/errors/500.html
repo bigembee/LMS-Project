@@ -1,0 +1,16 @@
+<!--
+500.html - "Server Error" page.
+
+Django shows this when an unhandled exception occurs in a view.
+In development (DEBUG=True), Django shows the full error traceback instead.
+In production (DEBUG=False), this page is shown to hide internal details from users.
+-->
+{% extends "base.html" %}
+
+{% block title %}500 - Server Error{% endblock %}
+
+{% block content %}
+<h1>500 - Server Error</h1>
+<p>Something went wrong. Please try again later.</p>
+<a href="/">Go Home</a>
+{% endblock %}
