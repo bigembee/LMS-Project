@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-with-sidebar">
+    <!-- This pulls in your sidebar.html file automatically -->
+    {% include "includes/sidebar.html" %} 
+    
+    <main>
+        <!-- 🎓 Add your student portal content here -->
+        <h1>Student Portal Dashboard</h1>
+        <p>Welcome back, {{ user.username }}!</p>
+        
+        <div class="dashboard-grid">
+            <!-- Put your course cards, schedules, or grades here -->
+        </div>
+    </main>
+</div>
+{% endblock %}

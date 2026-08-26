@@ -30,10 +30,11 @@ THE has_role FILTER:
     {% if user|has_role:"student" %}
         <a href="{% url 'students:dashboard' %}">Dashboard</a>
         <a href="{% url 'students:my_courses' %}">My Courses</a>
-        <a href="{% url 'students:timetable' %}">Timetable</a>
+        <a href="{% url 'students:schedule' %}">Schedule</a>
         <a href="{% url 'students:my_assignments' %}">Assignments</a>
         <a href="{% url 'students:my_grades' %}">Grades</a>
-        <a href="{% url 'students:gpa' %}">GPA</a>
+        <a href="{% url 'students:notes' %}">My Notes</a>
+        <a href="{% url 'students:maps' %}">Maps</a>
 
     <!-- LECTURER SIDEBAR — only shown to users with role="lecturer" -->
     {% elif user|has_role:"lecturer" %}
