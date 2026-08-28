@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Manage Sessions{% endblock %}
+{% block content %}
+<h1>Manage Sessions</h1>
+
+{% for session in sessions %}
+<div class="session-card">
+    <h2>{{ session.name }} {% if session.is_active %}(Active){% endif %}</h2>
+    <p>{{ session.start_date|date:"d M Y" }} &ndash; {{ session.end_date|date:"d M Y" }}</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Semester</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Active</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for semester in session.semesters.all %}
+            <tr>
+                <td>{{ semester.get_name_display }}</td>
+                <td>{{ semester.start_date|date:"d M Y" }}</td>
+                <td>{{ semester.end_date|date:"d M Y" }}</td>
+                <td>{% if semester.is_active %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">No semesters yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% empty %}
+<p>No academic sessions found.</p>
+{% endfor %}
+
+<p><a href="{% url 'administration:dashboard' %}">&larr; Back to Dashboard</a></p>
+{% endblock %}

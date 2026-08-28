@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <h1>Admin Dashboard</h1>
+
+    {% if active_session %}
+        <p class="session-banner">Active Session: {{ active_session }}</p>
+    {% else %}
+        <p class="session-banner session-banner--warning">No active session set</p>
+    {% endif %}
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h2>{{ total_students }}</h2>
+            <p>Total Students</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ total_lecturers }}</h2>
+            <p>Total Lecturers</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ total_courses }}</h2>
+            <p>Total Courses</p>
+        </div>
+    </div>
+
+    <div class="quick-links">
+        <a href="{% url 'administration:manage_students' %}">Manage Students</a>
+        <a href="{% url 'administration:manage_lecturers' %}">Manage Lecturers</a>
+        <a href="{% url 'administration:manage_courses' %}">Manage Courses</a>
+        <a href="{% url 'administration:manage_departments' %}">Manage Departments</a>
+        <a href="{% url 'administration:manage_enrollments' %}">Manage Enrollments</a>
+        <a href="{% url 'administration:manage_sessions' %}">Manage Sessions</a>
+        <a href="{% url 'administration:analytics' %}">Analytics</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Manage Enrollments{% endblock %}
+{% block content %}
+<h1>Manage Enrollments</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Course</th>
+            <th>Status</th>
+            <th>Enrolled At</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for enrollment in enrollments %}
+        <tr>
+            <td>{{ enrollment.student.get_full_name }}</td>
+            <td>{{ enrollment.course.code }} - {{ enrollment.course.title }}</td>
+            <td>{{ enrollment.get_status_display }}</td>
+            <td>{{ enrollment.enrolled_at|date:"d M Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No enrollments found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p><a href="{% url 'administration:dashboard' %}">&larr; Back to Dashboard</a></p>
+{% endblock %}

@@ -16,129 +16,124 @@ These views work with models from OTHER apps:
     - StudentProfile (students), LecturerProfile (lecturers)
 """
 
-from django.shortcuts import render
-from apps.accounts.decorators import admin_required  # Only admins can access these views
+from django.shortcuts import redirect, render
+from apps.accounts.decorators import admin_required
+from apps.accounts.models import User
+from apps.courses.models import Course,Department,Enrollment,AcademicSession,Semester   # Only admins can access these views
+from django.db.models import Count, Avg  # For analytics queries
+from apps.assignments.models import Grade  # For analytics queries
+from apps.courses.forms import CourseForm
+from django.shortcuts import get_object_or_404
 
 
 @admin_required
 def dashboard(request):
-    """
-    Admin dashboard — system overview with key statistics.
+    total_students = User.objects.filter(role="student").count()
+    total_lecturers = User.objects.filter(role="lecturer").count()
+    total_courses = Course.objects.count()
+    active_session = AcademicSession.objects.filter(is_active=True).first()
 
-    URL: /administration/dashboard/
-
-    TODO: Implement with analytics:
-        total_students = User.objects.filter(role="student").count()
-        total_lecturers = User.objects.filter(role="lecturer").count()
-        total_courses = Course.objects.count()
-        active_session = AcademicSession.objects.filter(is_active=True).first()
-    """
-    return render(request, "administration/dashboard.html")
+    context = {
+        "total_students": total_students,
+        "total_lecturers": total_lecturers,
+        "total_courses": total_courses,
+        "active_session": active_session,
+    }
+    return render(request, "administration/dashboard.html", context)
 
 
 @admin_required
 def manage_students(request):
-    """
-    List, search, create, edit, and deactivate student accounts.
-
-    URL: /administration/students/
-
-    TODO: Implement CRUD for students:
-        - GET: list all students with search/filter
-        - POST: create new student or update existing one
-        students = User.objects.filter(role="student").select_related("student_profile")
-    """
-    return render(request, "administration/manage_students.html")
+    students = User.objects.filter(role="student").select_related("student_profile")
+    context = {"students": students}
+    return render(request, "administration/manage_students.html", context)
 
 
 @admin_required
 def manage_lecturers(request):
-    """
-    List, search, create, edit, and deactivate lecturer accounts.
-
-    URL: /administration/lecturers/
-
-    TODO: Similar to manage_students but for lecturers
-    """
-    return render(request, "administration/manage_lecturers.html")
+    lecturers = User.objects.filter(role="lecturer").select_related("lecturer_profile")
+    context = {"lecturers": lecturers}
+    return render(request, "administration/manage_lecturers.html", context)
 
 
 @admin_required
 def manage_departments(request):
-    """
-    CRUD operations for departments.
-
-    URL: /administration/departments/
-
-    TODO: Implement:
-        departments = Department.objects.all()
-        Use DepartmentForm from apps/courses/forms.py for create/edit
-    """
-    return render(request, "administration/manage_departments.html")
+    departments = Department.objects.select_related("head")
+    context = {"departments": departments}
+    return render(request, "administration/manage_departments.html", context)
 
 
 @admin_required
 def manage_courses(request):
-    """
-    CRUD operations for courses.
+    if request.method == "POST":
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("administration:manage_courses")
+    else:
+        form = CourseForm()
 
-    URL: /administration/courses/
-
-    TODO: Implement:
-        courses = Course.objects.select_related("department", "lecturer", "semester")
-        Use CourseForm from apps/courses/forms.py for create/edit
-    """
-    return render(request, "administration/manage_courses.html")
+    courses = Course.objects.select_related("department", "lecturer", "semester")
+    context = {"courses": courses, "form": form}
+    return render(request, "administration/manage_courses.html", context)
 
 
 @admin_required
+def edit_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    if request.method == "POST":
+        form = CourseForm(request.POST, instance=course)
+        if form.is_valid():
+            form.save()
+            return redirect("administration:manage_courses")
+    else:
+        form = CourseForm(instance=course)
+
+    context = {"form": form, "course": course}
+    return render(request, "administration/edit_course.html", context)
+
+
+@admin_required
+def delete_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    if request.method == "POST":
+        course.delete()
+        return redirect("administration:manage_courses")
+    context = {"course": course}
+    return render(request, "administration/delete_course.html", context)
+
+@admin_required
 def manage_enrollments(request):
-    """
-    Manage student enrollments — add/remove students from courses.
-
-    URL: /administration/enrollments/
-
-    TODO: Implement:
-        enrollments = Enrollment.objects.select_related("student", "course")
-    """
-    return render(request, "administration/manage_enrollments.html")
+    enrollments = Enrollment.objects.select_related("student", "course")
+    context = {"enrollments": enrollments}
+    return render(request, "administration/manage_enrollments.html", context)
 
 
 @admin_required
 def manage_sessions(request):
-    """
-    Manage academic sessions and semesters.
-
-    URL: /administration/sessions/
-
-    The admin creates sessions (e.g., "2025/2026") and semesters within them.
-    Only one session and one semester should be active at a time.
-
-    TODO: Implement:
-        sessions = AcademicSession.objects.prefetch_related("semesters")
-        # prefetch_related() loads related semesters in a separate query
-        # More efficient than select_related() for reverse ForeignKey (one-to-many)
-    """
-    return render(request, "administration/manage_sessions.html")
-
+    sessions = AcademicSession.objects.prefetch_related("semesters")
+    context = {"sessions": sessions}
+    return render(request, "administration/manage_sessions.html", context)
 
 @admin_required
 def analytics(request):
-    """
-    System analytics and reports.
+    students_per_department = Department.objects.annotate(
+        student_count=Count("studentprofile")
+    )
+    courses_per_department = Department.objects.annotate(
+        course_count=Count("courses")
+    )
+    enrollment_status_counts = Enrollment.objects.values("status").annotate(
+        total=Count("id")
+    )
+    average_score_per_course = Course.objects.annotate(
+        avg_score=Avg("assignments__submissions__grade__score")
+    )
 
-    URL: /administration/analytics/
-
-    TODO: Implement with aggregated data:
-        - Students per department
-        - Average GPA per course
-        - Enrollment trends over time
-        - Assignment submission rates
-        - Grade distributions
-
-    Django's aggregation functions:
-        from django.db.models import Count, Avg
-        students_per_dept = Department.objects.annotate(student_count=Count("studentprofile"))
-        avg_scores = Grade.objects.aggregate(average=Avg("score"))
-    """
-    return render(request, "administration/analytics.html")
+    context = {
+        "students_per_department": students_per_department,
+        "courses_per_department": courses_per_department,
+        "enrollment_status_counts": enrollment_status_counts,
+        "average_score_per_course": average_score_per_course,
+    }
+    return render(request, "administration/analytics.html", context)

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Manage Courses{% endblock %}
+{% block content %}
+<h1>Manage Courses</h1>
+
+<h2>Add New Course</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Course</button>
+</form>
+
+<table>
+    <thead>
+    <tr>
+        <th>Code</th>
+        <th>Title</th>
+        <th>Department</th>
+        <th>Lecturer</th>
+        <th>Semester</th>
+        <th>Enrolled / Max</th>
+        <th>Actions</th>
+    </tr>
+</thead>
+<tbody>
+    {% for course in courses %}
+    <tr>
+        <td>{{ course.code }}</td>
+        <td>{{ course.title }}</td>
+        <td>{{ course.department }}</td>
+        <td>{{ course.lecturer }}</td>
+        <td>{{ course.semester }}</td>
+        <td>{{ course.enrolled_count }} / {{ course.max_students }}</td>
+        <td>
+            <a href="{% url 'administration:edit_course' course.id %}">Edit</a>
+            |
+            <a href="{% url 'administration:delete_course' course.id %}">Delete</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="7">No courses found.</td></tr>
+    {% endfor %}
+</tbody>
+</table>
+
+<p><a href="{% url 'administration:dashboard' %}">&larr; Back to Dashboard</a></p>
+{% endblock %}

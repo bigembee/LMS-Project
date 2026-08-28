@@ -28,4 +28,6 @@ urlpatterns = [
     path("enrollments/", views.manage_enrollments, name="manage_enrollments"),
     path("sessions/", views.manage_sessions, name="manage_sessions"),
     path("analytics/", views.analytics, name="analytics"),
+    path("courses/<int:course_id>/edit/", views.edit_course, name="edit_course"),
+    path("courses/<int:course_id>/delete/", views.delete_course, name="delete_course"),
 ]
