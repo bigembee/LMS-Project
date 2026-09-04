@@ -30,4 +30,6 @@ urlpatterns = [
     path("analytics/", views.analytics, name="analytics"),
     path("courses/<int:course_id>/edit/", views.edit_course, name="edit_course"),
     path("courses/<int:course_id>/delete/", views.delete_course, name="delete_course"),
+    path("departments/<int:department_id>/edit/", views.edit_department, name="edit_department"),
+    path("departments/<int:department_id>/delete/", views.delete_department, name="delete_department"),
 ]
