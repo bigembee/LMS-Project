@@ -3,10 +3,24 @@
 {% block content %}
 <h1>Manage Sessions</h1>
 
+<h2>Add New Session</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Session</button>
+</form>
+
+<p><a href="{% url 'administration:add_semester' %}">+ Add Semester</a></p>
+
 {% for session in sessions %}
 <div class="session-card">
     <h2>{{ session.name }} {% if session.is_active %}(Active){% endif %}</h2>
     <p>{{ session.start_date|date:"d M Y" }} &ndash; {{ session.end_date|date:"d M Y" }}</p>
+    <p>
+        <a href="{% url 'administration:edit_session' session.id %}">Edit Session</a>
+        |
+        <a href="{% url 'administration:delete_session' session.id %}">Delete Session</a>
+    </p>
 
     <table>
         <thead>
@@ -15,6 +29,7 @@
                 <th>Start</th>
                 <th>End</th>
                 <th>Active</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -24,9 +39,14 @@
                 <td>{{ semester.start_date|date:"d M Y" }}</td>
                 <td>{{ semester.end_date|date:"d M Y" }}</td>
                 <td>{% if semester.is_active %}Yes{% else %}No{% endif %}</td>
+                <td>
+                    <a href="{% url 'administration:edit_semester' semester.id %}">Edit</a>
+                    |
+                    <a href="{% url 'administration:delete_semester' semester.id %}">Delete</a>
+                </td>
             </tr>
             {% empty %}
-            <tr><td colspan="4">No semesters yet.</td></tr>
+            <tr><td colspan="5">No semesters yet.</td></tr>
             {% endfor %}
         </tbody>
     </table>

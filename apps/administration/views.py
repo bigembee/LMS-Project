@@ -22,7 +22,7 @@ from apps.accounts.models import User
 from apps.courses.models import Course,Department,Enrollment,AcademicSession,Semester   # Only admins can access these views
 from django.db.models import Count, Avg  # For analytics queries
 from apps.assignments.models import Grade  # For analytics queries
-from apps.courses.forms import CourseForm
+from apps.courses.forms import CourseForm, DepartmentForm, AcademicSessionForm
 from django.shortcuts import get_object_or_404
 
 
@@ -58,10 +58,42 @@ def manage_lecturers(request):
 
 @admin_required
 def manage_departments(request):
+    if request.method == "POST":
+        form = DepartmentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("administration:manage_departments")
+    else:
+        form = DepartmentForm()
+
     departments = Department.objects.select_related("head")
-    context = {"departments": departments}
+    context = {"departments": departments, "form": form}
     return render(request, "administration/manage_departments.html", context)
 
+
+@admin_required
+def edit_department(request, department_id):
+    department = get_object_or_404(Department, id=department_id)
+    if request.method == "POST":
+        form = DepartmentForm(request.POST, instance=department)
+        if form.is_valid():
+            form.save()
+            return redirect("administration:manage_departments")
+    else:
+        form = DepartmentForm(instance=department)
+
+    context = {"form": form, "department": department}
+    return render(request, "administration/edit_department.html", context)
+
+
+@admin_required
+def delete_department(request, department_id):
+    department = get_object_or_404(Department, id=department_id)
+    if request.method == "POST":
+        department.delete()
+        return redirect("administration:manage_departments")
+    context = {"department": department}
+    return render(request, "administration/delete_department.html", context)
 
 @admin_required
 def manage_courses(request):
@@ -111,9 +143,42 @@ def manage_enrollments(request):
 
 @admin_required
 def manage_sessions(request):
+    if request.method == "POST":
+        form = AcademicSessionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("administration:manage_sessions")
+    else:
+        form = AcademicSessionForm()
+
     sessions = AcademicSession.objects.prefetch_related("semesters")
-    context = {"sessions": sessions}
+    context = {"sessions": sessions, "form": form}
     return render(request, "administration/manage_sessions.html", context)
+
+
+@admin_required
+def edit_session(request, session_id):
+    session = get_object_or_404(AcademicSession, id=session_id)
+    if request.method == "POST":
+        form = AcademicSessionForm(request.POST, instance=session)
+        if form.is_valid():
+            form.save()
+            return redirect("administration:manage_sessions")
+    else:
+        form = AcademicSessionForm(instance=session)
+
+    context = {"form": form, "session": session}
+    return render(request, "administration/edit_session.html", context)
+
+
+@admin_required
+def delete_session(request, session_id):
+    session = get_object_or_404(AcademicSession, id=session_id)
+    if request.method == "POST":
+        session.delete()
+        return redirect("administration:manage_sessions")
+    context = {"session": session}
+    return render(request, "administration/delete_session.html", context)
 
 @admin_required
 def analytics(request):
