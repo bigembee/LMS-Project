@@ -234,3 +234,20 @@ class Enrollment(models.Model):
 
     def __str__(self):
         return f"{self.student} - {self.course.code}"
+class Lecture(models.Model):
+    """
+    Represents a single lecture or lesson within a Course.
+    """
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="lectures")
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    video_url = models.URLField(blank=True, help_text="Link to lecture video (e.g. YouTube, Vimeo)")
+    order = models.PositiveIntegerField(default=1, help_text="Order of the lecture in the course syllabus")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["order", "created_at"]
+
+    def __str__(self):
+        return f"{self.course.code} - {self.title}"
