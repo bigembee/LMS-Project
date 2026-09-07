@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Delete Department{% endblock %}
+{% block content %}
+<h1>Delete Department</h1>
+<p>Are you sure you want to delete <strong>{{ department.name }}</strong>? This cannot be undone.</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, Delete</button>
+</form>
+
+<p><a href="{% url 'administration:manage_departments' %}">&larr; Cancel</a></p>
+{% endblock %}
