@@ -1,4 +1,4 @@
-<!--
+{% comment %}
 sidebar.html - Role-specific sidebar navigation.
 
 Shows different menu items depending on the user's role.
@@ -22,7 +22,8 @@ THE has_role FILTER:
 
     This calls: has_role(user, "student") from core_tags.py
     Returns True if user.role == "student"
--->
+{% endcomment %}
+
 {% load core_tags %}
 
 <aside class="sidebar">

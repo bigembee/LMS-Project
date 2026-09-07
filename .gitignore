@@ -27,6 +27,7 @@ env/                # Any of these could be your virtualenv
 .venv/              # Don't commit 500MB+ of installed packages!
 
 # --- Django ---
+db.sqlite3          # The default Django database filename
 *.sqlite3           # SQLite database files — each developer has their own local DB
 db.sqlite3          # The default Django database filename
 media/              # User-uploaded files (profile pics, assignment submissions)
@@ -53,3 +54,6 @@ htmlcov/            # HTML coverage report
 # --- Node.js (if React is added later) ---
 node_modules/       # JavaScript dependencies — like venv but for JS
 package-lock.json   # Lockfile for npm
+
+
+settings.json          # VS Code workspace settings (personal to each developer)

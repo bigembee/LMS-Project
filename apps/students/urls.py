@@ -24,8 +24,10 @@ urlpatterns = [
     path("dashboard/", views.dashboard, name="dashboard"),
     path("courses/", views.my_courses, name="my_courses"),
     path("courses/register/", views.register_course, name="register_course"),
-    path("timetable/", views.timetable, name="timetable"),
+    path("timetable/", views.schedule, name="schedule"),
     path("assignments/", views.my_assignments, name="my_assignments"),
     path("grades/", views.my_grades, name="my_grades"),
     path("gpa/", views.gpa, name="gpa"),
+    path("notes/", views.notes, name="notes"),
+    path("maps/", views.maps, name="maps")
 ]
