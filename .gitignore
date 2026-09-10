@@ -53,3 +53,7 @@ htmlcov/            # HTML coverage report
 # --- Node.js (if React is added later) ---
 node_modules/       # JavaScript dependencies — like venv but for JS
 package-lock.json   # Lockfile for npm
+
+# --- Ignore python cache and bytecode files ---
+__pycache__/        # Python's compiled bytecode cache
+*.pyc               # Python compiled files
