@@ -22,7 +22,7 @@ from apps.accounts.models import User
 from apps.courses.models import Course,Department,Enrollment,AcademicSession,Semester   # Only admins can access these views
 from django.db.models import Count, Avg  # For analytics queries
 from apps.assignments.models import Grade  # For analytics queries
-from apps.courses.forms import CourseForm, DepartmentForm, AcademicSessionForm
+from apps.courses.forms import CourseForm, DepartmentForm, AcademicSessionForm,SemesterForm
 from django.shortcuts import get_object_or_404
 
 
@@ -181,6 +181,44 @@ def delete_session(request, session_id):
     return render(request, "administration/delete_session.html", context)
 
 @admin_required
+def add_semester(request):
+    if request.method == "POST":
+        form = SemesterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("administration:manage_sessions")
+    else:
+        form = SemesterForm()
+
+    context = {"form": form}
+    return render(request, "administration/add_semester.html", context)
+
+
+@admin_required
+def edit_semester(request, semester_id):
+    semester = get_object_or_404(Semester, id=semester_id)
+    if request.method == "POST":
+        form = SemesterForm(request.POST, instance=semester)
+        if form.is_valid():
+            form.save()
+            return redirect("administration:manage_sessions")
+    else:
+        form = SemesterForm(instance=semester)
+
+    context = {"form": form, "semester": semester}
+    return render(request, "administration/edit_semester.html", context)
+
+
+@admin_required
+def delete_semester(request, semester_id):
+    semester = get_object_or_404(Semester, id=semester_id)
+    if request.method == "POST":
+        semester.delete()
+        return redirect("administration:manage_sessions")
+    context = {"semester": semester}
+    return render(request, "administration/delete_semester.html", context)
+
+@admin_required
 def analytics(request):
     students_per_department = Department.objects.annotate(
         student_count=Count("studentprofile")
@@ -202,3 +240,4 @@ def analytics(request):
         "average_score_per_course": average_score_per_course,
     }
     return render(request, "administration/analytics.html", context)
+
