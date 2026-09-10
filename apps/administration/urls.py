@@ -34,7 +34,7 @@ urlpatterns = [
     path("departments/<int:department_id>/delete/", views.delete_department, name="delete_department"),
     path("sessions/<int:session_id>/edit/", views.edit_session, name="edit_session"),
     path("sessions/<int:session_id>/delete/", views.delete_session, name="delete_session"),
-    path("sessions/semesters/add/", views.add_semester, name="add_semester"),
-    path("sessions/semesters/<int:semester_id>/edit/", views.edit_semester, name="edit_semester"),
-    path("sessions/semesters/<int:semester_id>/delete/", views.delete_semester, name="delete_semester"),
+    # path("sessions/semesters/add/", views.add_semester, name="add_semester"),
+    # path("sessions/semesters/<int:semester_id>/edit/", views.edit_semester, name="edit_semester"),
+    # path("sessions/semesters/<int:semester_id>/delete/", views.delete_semester, name="delete_semester"),
 ]

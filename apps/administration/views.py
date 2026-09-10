@@ -22,7 +22,7 @@ from apps.accounts.models import User
 from apps.courses.models import Course,Department,Enrollment,AcademicSession,Semester   # Only admins can access these views
 from django.db.models import Count, Avg  # For analytics queries
 from apps.assignments.models import Grade  # For analytics queries
-from apps.courses.forms import CourseForm, DepartmentForm, AcademicSessionForm
+from apps.courses.forms import CourseForm, DepartmentForm, AcademicSessionForm, SemesterForm
 from django.shortcuts import get_object_or_404
 
 

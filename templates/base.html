@@ -54,13 +54,15 @@ TEMPLATE TAGS USED:
     <!-- Navigation bar — included from a separate file for cleanliness -->
     {% include "includes/navbar.html" %}
 
-    <div class="container">
-        <!-- Flash messages (success, error, warning, info) — shown once then disappear -->
-        {% include "includes/messages.html" %}
+    <div class="page-with-sidebar">
+        {% include "includes/sidebar.html" %}
 
-        <!-- MAIN CONTENT AREA — each page template fills this block -->
-        {% block content %}
-        {% endblock %}
+        <main class="main-content">
+            {% include "includes/messages.html" %}
+
+            {% block content %}
+            {% endblock %}
+        </main>
     </div>
 
     <!-- Page footer — included from a separate file -->
