@@ -1,4 +1,4 @@
-<!--
+{% comment %}
 base.html - The MASTER TEMPLATE that all other templates extend.
 
 TEMPLATE INHERITANCE:
@@ -6,30 +6,31 @@ TEMPLATE INHERITANCE:
     1. base.html defines the overall page structure (HTML skeleton)
     2. Other templates "extend" it and fill in specific sections
 
-    Think of it like a picture frame — base.html is the frame,
+    Think of it like a picture frame -- base.html is the frame,
     and each page template is the picture that goes inside.
 
 HOW IT WORKS:
-    base.html defines "blocks" — placeholder sections that child templates can override:
-        {% block title %}LMS{% endblock %}         ← default title is "LMS"
-        {% block content %}{% endblock %}           ← content area (empty by default)
+    base.html defines "blocks" -- placeholder sections that child templates can override:
+        {%% block title %%}LMS{%% endblock %%}         <-- default title is "LMS"
+        {%% block content %%}{%% endblock %%}           <-- content area (empty by default)
 
     A child template (e.g., dashboard.html) extends this and fills in the blocks:
-        {% extends "base.html" %}
-        {% block title %}Student Dashboard{% endblock %}
-        {% block content %}
+        {%% extends "base.html" %%}
+        {%% block title %%}Student Dashboard{%% endblock %%}
+        {%% block content %%}
             <h1>Welcome, {{ user.first_name }}!</h1>
-        {% endblock %}
+        {%% endblock %%}
 
     The result: the full HTML page with navbar, footer, etc., but with
     "Student Dashboard" as the title and the dashboard content in the body.
 
 TEMPLATE TAGS USED:
-    {% load static %}         → enables the {% static %} tag for loading CSS/JS files
-    {% block name %}...{% endblock %} → defines an overridable section
-    {% include "file.html" %} → inserts another template's content here
-    {% static 'path' %}       → generates the URL for a static file (/static/css/main.css)
--->
+    {%% load static %%}         -- enables the static tag for loading CSS/JS files
+    {%% block name %%}...{%% endblock %%} -- defines an overridable section
+    {%% include "file.html" %%} -- inserts another template's content here
+    {%% static 'path' %%}       -- generates the URL for a static file (/static/css/main.css)
+{% endcomment %}
+    
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,11 +40,11 @@ TEMPLATE TAGS USED:
     <!-- Page title — child templates override this block to set their own title -->
     <title>{% block title %}LMS{% endblock %}</title>
 
-    <!-- Load the {% static %} template tag — needed to reference CSS/JS files -->
+    <!-- Load the "static" template tag — needed to reference CSS/JS files -->
     {% load static %}
 
     <!-- Link to our main stylesheet: static/css/main.css -->
-    <!-- {% static 'css/main.css' %} outputs: /static/css/main.css -->
+    <!-- outputs: /static/css/main.css -->
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
     <!-- Extra CSS block — child templates can add page-specific stylesheets here -->
@@ -53,13 +54,15 @@ TEMPLATE TAGS USED:
     <!-- Navigation bar — included from a separate file for cleanliness -->
     {% include "includes/navbar.html" %}
 
-    <div class="container">
-        <!-- Flash messages (success, error, warning, info) — shown once then disappear -->
-        {% include "includes/messages.html" %}
+    <div class="page-with-sidebar">
+        {% include "includes/sidebar.html" %}
 
-        <!-- MAIN CONTENT AREA — each page template fills this block -->
-        {% block content %}
-        {% endblock %}
+        <main class="main-content">
+            {% include "includes/messages.html" %}
+
+            {% block content %}
+            {% endblock %}
+        </main>
     </div>
 
     <!-- Page footer — included from a separate file -->

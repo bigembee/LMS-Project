@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Analytics{% endblock %}
+{% block content %}
+<h1>Analytics</h1>
+
+<h2>Students per Department</h2>
+<table>
+    <thead><tr><th>Department</th><th>Students</th></tr></thead>
+    <tbody>
+        {% for dept in students_per_department %}
+        <tr><td>{{ dept.name }}</td><td>{{ dept.student_count }}</td></tr>
+        {% empty %}
+        <tr><td colspan="2">No data.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Courses per Department</h2>
+<table>
+    <thead><tr><th>Department</th><th>Courses</th></tr></thead>
+    <tbody>
+        {% for dept in courses_per_department %}
+        <tr><td>{{ dept.name }}</td><td>{{ dept.course_count }}</td></tr>
+        {% empty %}
+        <tr><td colspan="2">No data.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Enrollment Status Breakdown</h2>
+<table>
+    <thead><tr><th>Status</th><th>Total</th></tr></thead>
+    <tbody>
+        {% for row in enrollment_status_counts %}
+        <tr><td>{{ row.status }}</td><td>{{ row.total }}</td></tr>
+        {% empty %}
+        <tr><td colspan="2">No data.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Average Score per Course</h2>
+<table>
+    <thead><tr><th>Course</th><th>Average Score</th></tr></thead>
+    <tbody>
+        {% for course in average_score_per_course %}
+        <tr>
+            <td>{{ course.code }} - {{ course.title }}</td>
+            <td>{% if course.avg_score %}{{ course.avg_score|floatformat:2 }}{% else %}No grades yet{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="2">No courses found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p><a href="{% url 'administration:dashboard' %}">&larr; Back to Dashboard</a></p>
+{% endblock %}

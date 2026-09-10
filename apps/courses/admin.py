@@ -57,3 +57,9 @@ class EnrollmentAdmin(admin.ModelAdmin):
     # The double underscore (student__username) traverses the ForeignKey relationship:
     # Enrollment → student (User) → username
     search_fields = ["student__username", "course__code"]
+from .models import Lecture
+
+@admin.register(Lecture)
+class LectureAdmin(admin.ModelAdmin):
+    list_display = ["title", "course", "order", "created_at"]
+    list_filter = ["course"]

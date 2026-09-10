@@ -86,7 +86,7 @@ def register_course(request):
 
 
 @student_required
-def timetable(request):
+def schedule(request):
     """
     Display the student's weekly course timetable.
 
@@ -95,7 +95,7 @@ def timetable(request):
     TODO: This requires a Timetable/Schedule model (Phase 2)
     or can be computed from enrolled courses + time slots
     """
-    return render(request, "students/timetable.html")
+    return render(request, "students/schedule.html")
 
 
 @student_required
@@ -148,3 +148,22 @@ def gpa(request):
     TODO: Implement using calculate_gpa() and score_to_grade() from utils.py
     """
     return render(request, "students/gpa.html")
+
+@student_required
+def notes(request):
+    """
+    Display the student's notes.
+
+    URL: /students/notes/
+    """
+    return render(request, "students/notes.html")
+
+@student_required
+def maps(request):
+    """
+    Display the schools map and how to locate classes.
+
+    URL: /students/maps/
+    """
+    return render(request, "students/maps.html")
+

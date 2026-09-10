@@ -1,4 +1,4 @@
-<!--
+{% comment %}
 navbar.html - The navigation bar shown at the top of every page.
 
 This is INCLUDED in base.html via {% include "includes/navbar.html" %}
@@ -13,7 +13,8 @@ TEMPLATE TAGS USED:
 
 NOTE: "user" is available in ALL templates automatically because of the
 "django.contrib.auth.context_processors.auth" context processor in settings.py.
--->
+{% endcomment %}
+
 {% load static %}
 {% load core_tags %}
 

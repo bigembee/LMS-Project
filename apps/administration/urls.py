@@ -28,4 +28,13 @@ urlpatterns = [
     path("enrollments/", views.manage_enrollments, name="manage_enrollments"),
     path("sessions/", views.manage_sessions, name="manage_sessions"),
     path("analytics/", views.analytics, name="analytics"),
+    path("courses/<int:course_id>/edit/", views.edit_course, name="edit_course"),
+    path("courses/<int:course_id>/delete/", views.delete_course, name="delete_course"),
+    path("departments/<int:department_id>/edit/", views.edit_department, name="edit_department"),
+    path("departments/<int:department_id>/delete/", views.delete_department, name="delete_department"),
+    path("sessions/<int:session_id>/edit/", views.edit_session, name="edit_session"),
+    path("sessions/<int:session_id>/delete/", views.delete_session, name="delete_session"),
+    # path("sessions/semesters/add/", views.add_semester, name="add_semester"),
+    # path("sessions/semesters/<int:semester_id>/edit/", views.edit_semester, name="edit_semester"),
+    # path("sessions/semesters/<int:semester_id>/delete/", views.delete_semester, name="delete_semester"),
 ]

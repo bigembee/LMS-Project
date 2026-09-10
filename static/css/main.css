@@ -50,12 +50,10 @@ body {
     line-height: 1.6;  /* Space between lines — 1.6x the font size for readability */
 }
 
-/* --- Container --- */
-/* Centers content and limits width — prevents text from stretching across wide screens */
-.container {
-    max-width: 1200px;      /* Content won't exceed 1200px wide */
-    margin: 0 auto;         /* Center horizontally (auto left/right margins) */
-    padding: 20px;          /* Space between content and edges */
+/* --- Page Layout with Sidebar --- */
+.page-with-sidebar {
+    display: flex;
+    min-height: calc(100vh - 49px);  /* Full height minus navbar */
 }
 
 /* --- Navbar --- */
@@ -91,23 +89,31 @@ body {
 /* --- Sidebar --- */
 /* Vertical navigation menu on the left side of dashboard pages */
 .sidebar {
-    width: 240px;
+    width: 220px;
+    flex-shrink: 0;             /* Don't let the sidebar shrink on small screens */
     background: var(--surface);
     border-right: 1px solid var(--border);
-    padding: 20px 0;
-    min-height: calc(100vh - 60px);  /* Full height minus navbar (calc does math in CSS) */
+    padding: 16px 0;
 }
 
 .sidebar a {
-    display: block;             /* Each link takes the full width (stacked vertically) */
-    padding: 10px 24px;
+    display: block;
+    padding: 10px 20px;
     color: var(--text);
     text-decoration: none;
+    font-size: 0.9rem;
 }
 
 .sidebar a:hover {
-    background: var(--bg);      /* Light grey background on hover */
+    background: var(--bg);
     color: var(--primary);
+}
+
+/* --- Main Content Area --- */
+/* Takes up the remaining space next to the sidebar */
+.main-content {
+    flex: 1;                    /* Grow to fill all remaining space */
+    padding: 24px;
 }
 
 /* --- Alert Messages --- */

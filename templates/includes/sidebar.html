@@ -1,4 +1,4 @@
-<!--
+{% comment %}
 sidebar.html - Role-specific sidebar navigation.
 
 Shows different menu items depending on the user's role.
@@ -22,7 +22,8 @@ THE has_role FILTER:
 
     This calls: has_role(user, "student") from core_tags.py
     Returns True if user.role == "student"
--->
+{% endcomment %}
+
 {% load core_tags %}
 
 <aside class="sidebar">
@@ -30,10 +31,11 @@ THE has_role FILTER:
     {% if user|has_role:"student" %}
         <a href="{% url 'students:dashboard' %}">Dashboard</a>
         <a href="{% url 'students:my_courses' %}">My Courses</a>
-        <a href="{% url 'students:timetable' %}">Timetable</a>
+        <a href="{% url 'students:schedule' %}">Schedule</a>
         <a href="{% url 'students:my_assignments' %}">Assignments</a>
         <a href="{% url 'students:my_grades' %}">Grades</a>
-        <a href="{% url 'students:gpa' %}">GPA</a>
+        <a href="{% url 'students:notes' %}">My Notes</a>
+        <a href="{% url 'students:maps' %}">Maps</a>
 
     <!-- LECTURER SIDEBAR — only shown to users with role="lecturer" -->
     {% elif user|has_role:"lecturer" %}

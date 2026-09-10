@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+  <h1>Student Portal Dashboard</h1>
+  <p>Welcome back, {{ user.username }}!</p>
+
+  <!-- Top header-->
+  <header class="top-header">
+    <div class="header-left">
+      <button class="icon-btn">🔍</button>
+      <button class="icon-btn">⚙️</button>
+    </div>
+    <div class="header-right">
+      <div class="user-profile">
+        <img src="{% static 'images/profile.jpg' %}" alt="Profile Picture" class="avatar">
+        <div>
+          <h4>Stephanie L2E</h4>
+          <p>Physiology</p>
+        </div>
+      </div>
+      <button class="icon-btn">...</button>
+    </div>
+  </header>
+
+  <!-- Content Grid-->
+  <main class="dashboard-grid">
+
+    <!-- left column: Assignments -->
+    <section class="card task-selection">
+      <div class="section-header">
+        <h3>Assignments</h3>
+        <button class="add-btn">+</button>
+      </div>
+      <div class="filters">
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">To do</button>
+        <button class="filter-btn">Pending</button>
+        <button class="filter-btn">Completed</button>
+      </div>
+
+      <div class="assignment-list">
+        <div class="task-item">
+          <h4>Assignment 1</h4>
+          <p>Due: 2024-06-15</p>
+        </div>
+        <div class="task-item">
+          <h4>Assignment 2</h4>
+          <p>Due: 2024-06-20</p>
+        </div>
+        <!-- Add more task items as needed -->
+    </section>
+
+    <!-- right column: Recent Activity -->
+    <section class="recent-activity">
+      <h2>Recent Activity</h2>
+      <p>Check out your recent activity here.</p>
+    </section>
+  </main>
+  <section>
+    <header>
+      <input type="search" placeholder="search...">
+      <div>
+        <span>Stephanie Adamu</span>
+        <small>RSU</small>
+      </div>
+    </header>
+  </section>
+
+  <div class="dashboard-grid">
+  </div>
+
+{% endblock %}
