@@ -115,3 +115,34 @@ class User(AbstractUser):
         Named is_admin_user (not is_admin) to avoid conflicting with Django's is_staff.
         """
         return self.role == self.Role.ADMIN
+
+
+
+class Student(models.Model):
+    MEMBERSHIP_FRESHMAN = 'F'
+    MEMBERSHIP_BACHELOR_OF_SCIENCE = 'BSC'
+    MEMBERSHIP_POST_GRADUATE_DIPLOMA ='PGD'
+    MEMBERSHIP_MASTER_OF_SCIENCE= 'MSC'
+    MEMBERSHIP_MASTER_OF_PHILOSOPHY ='MPHIL'
+    MEMBERSHIP_DOCTOR_OF_PHILOSOPHY = 'PHD'
+    
+    MEMBERSHIP_CHOICES = [
+        (MEMBERSHIP_FRESHMAN, 'Freshman'),
+        (MEMBERSHIP_BACHELOR_OF_SCIENCE, 'Bachelor of Science'),
+        (MEMBERSHIP_POST_GRADUATE_DIPLOMA, 'Post Graduate Diploma'),
+        (MEMBERSHIP_MASTER_OF_SCIENCE, 'Master of Science'),
+        (MEMBERSHIP_MASTER_OF_PHILOSOPHY, 'Master of Philosophy'),
+        (MEMBERSHIP_DOCTOR_OF_PHILOSOPHY, 'Doctor of Philosophy'),
+    ]
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    slug = models.SlugField()
+    email = models.EmailField(unique=True)
+    phone = models.CharField(max_length=255)
+    birth_date = models.DateField(null=True)
+    password = models.CharField(max_length=128)
+    encrypted_key = models.IntegerField()
+    #passwords should not be more than 10 
+    membership = models.CharField(max_length=5, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_FRESHMAN)
+    
+    
