@@ -67,7 +67,8 @@ def login_view(request):
 
     TODO: Implement this — use LoginForm from forms.py or Django's AuthenticationForm
     """
-    return render(request, "accounts/login.html")
+    return render(request,'accounts/login.html', {'name': 'Student'})
+
 
 
 def logout_view(request):
