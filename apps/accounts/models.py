@@ -119,21 +119,10 @@ class User(AbstractUser):
 
 
 class Student(models.Model):
-    MEMBERSHIP_FRESHMAN = 'F'
-    MEMBERSHIP_BACHELOR_OF_SCIENCE = 'BSC'
-    MEMBERSHIP_POST_GRADUATE_DIPLOMA ='PGD'
-    MEMBERSHIP_MASTER_OF_SCIENCE= 'MSC'
-    MEMBERSHIP_MASTER_OF_PHILOSOPHY ='MPHIL'
-    MEMBERSHIP_DOCTOR_OF_PHILOSOPHY = 'PHD'
+    STUDENT = 'S'
+    LECTURER = 'L'
+    ROLE = [(STUDENT, 'Student'), (LECTURER, 'Lecturer')]
     
-    MEMBERSHIP_CHOICES = [
-        (MEMBERSHIP_FRESHMAN, 'Freshman'),
-        (MEMBERSHIP_BACHELOR_OF_SCIENCE, 'Bachelor of Science'),
-        (MEMBERSHIP_POST_GRADUATE_DIPLOMA, 'Post Graduate Diploma'),
-        (MEMBERSHIP_MASTER_OF_SCIENCE, 'Master of Science'),
-        (MEMBERSHIP_MASTER_OF_PHILOSOPHY, 'Master of Philosophy'),
-        (MEMBERSHIP_DOCTOR_OF_PHILOSOPHY, 'Doctor of Philosophy'),
-    ]
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     slug = models.SlugField()
@@ -143,6 +132,9 @@ class Student(models.Model):
     password = models.CharField(max_length=128)
     encrypted_key = models.IntegerField()
     #passwords should not be more than 10 
-    membership = models.CharField(max_length=5, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_FRESHMAN)
+    department = models.CharField(max_length=255)
+    sex = models.CharField(max_length=255)
+    year_of_admission = models.IntegerField()
+    membership = models.CharField(max_length=1, choices=ROLE)
     
     
