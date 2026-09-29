@@ -28,6 +28,12 @@ from django.contrib.auth import login, logout                   # Django's login
 from django.contrib.auth.decorators import login_required       # Decorator: must be logged in to access
 from django.contrib import messages                             # Flash messages ("Success!", "Error!")
 
+from rest_framework import generics, permissions
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from .serializers import RegisterSerializer
+from .forms import RegistrationForm
 
 def register_view(request):
     """
@@ -52,8 +58,49 @@ def register_view(request):
             form = RegistrationForm()
         return render(request, "accounts/register.html", {"form": form})
     """
-    return render(request, "accounts/register.html")
+    if request.method == "POST":
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Registration successful!")
+            return redirect("accounts:dashboard_redirect")
+    else:
+        form = RegistrationForm()
+    return render(request, "accounts/register.html", {"form": form})
 
+
+
+class RegisterView(generics.CreateAPIView):
+    serializer_class = RegisterSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+
+        # Optional: issue JWT immediately after registration
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            "user": {"id": user.id, "email": user.email, "role": user.role},
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+        }, status=201)
+
+def terms_view(request):
+    """
+    Handle user login.
+
+    GET request: Display the login form
+    POST request: Validate credentials, log user in, redirect to dashboard
+
+    FLOW: User visits /accounts/login/ → enters username & password → submits →
+          Django checks credentials → if valid, creates a session → redirect to dashboard
+
+    TODO: Implement this — use LoginForm from forms.py or Django's AuthenticationForm
+    """
+    return render(request,'accounts/terms.html')
 
 def login_view(request):
     """
@@ -67,7 +114,7 @@ def login_view(request):
 
     TODO: Implement this — use LoginForm from forms.py or Django's AuthenticationForm
     """
-    return render(request,'accounts/login.html', {'name': 'Student'})
+    return render(request,'accounts/login.html')
 
 
 

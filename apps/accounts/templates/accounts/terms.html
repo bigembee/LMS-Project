@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terms & Conditions</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background: #f2f3f5;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+
+      .tc-card {
+        width: 100%;
+        max-width: 760px;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px #0b50e3(0, 0, 0, 0.08);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Header */
+      .tc-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 20px 24px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .tc-back {
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        color: #0b50e3;
+        line-height: 1;
+      }
+
+      .tc-header h1 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #0b50e3;
+      }
+
+      /* Body layout */
+      .tc-body {
+        display: flex;
+        min-height: 480px;
+      }
+
+      /* Sidebar */
+      .tc-sidebar {
+        width: 220px;
+        flex-shrink: 0;
+        border-right: 1px solid #eee;
+        padding: 16px 0;
+      }
+
+      .tc-nav-item {
+        padding: 14px 24px;
+        font-size: 14px;
+        color: #0b50e3;
+        cursor: pointer;
+        border-left: 3px solid transparent;
+        transition:
+          background 0.15s ease,
+          color 0.15s ease;
+      }
+
+      .tc-nav-item:hover {
+        background: #f7f7f8;
+      }
+
+      .tc-nav-item.active {
+        background: #ececec;
+        color: #111;
+        font-weight: 600;
+        border-left-color: #0b50e3;
+      }
+
+      /* Content */
+      .tc-content {
+        flex: 1;
+        padding: 24px 28px;
+        overflow-y: auto;
+        max-height: 560px;
+      }
+
+      .tc-panel {
+        display: none;
+      }
+
+      .tc-panel.active {
+        display: block;
+      }
+
+      .tc-panel-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #111;
+        margin-bottom: 16px;
+      }
+
+      .tc-welcome {
+        background: #ececec;
+        border: 1px solid #0b50e3;
+        border-radius: 10px;
+        padding: 16px 18px;
+        margin-bottom: 24px;
+      }
+
+      .tc-welcome h2 {
+        font-size: 14px;
+        color: #111;
+        margin-bottom: 6px;
+      }
+
+      .tc-welcome p {
+        font-size: 13px;
+        line-height: 1.6;
+        color: #333;
+      }
+
+      .tc-section {
+        margin-bottom: 22px;
+      }
+
+      .tc-section h3 {
+        font-size: 14.5px;
+        color: #111;
+        margin-bottom: 8px;
+      }
+
+      .tc-section p,
+      .tc-section li {
+        font-size: 13px;
+        line-height: 1.7;
+        color: #4a4a4a;
+      }
+
+      .tc-section ul {
+        margin-top: 6px;
+        padding-left: 18px;
+      }
+
+      .tc-updated {
+        font-size: 12px;
+        color: #9a9a9a;
+        margin-bottom: 20px;
+      }
+
+      /* Footer actions */
+      .tc-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        padding: 18px 28px;
+        border-top: 1px solid #eee;
+      }
+
+      .btn {
+        border: none;
+        border-radius: 999px;
+        padding: 10px 26px;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          opacity 0.15s ease,
+          transform 0.15s ease;
+      }
+
+      .btn:hover {
+        opacity: 0.9;
+      }
+
+      .btn:active {
+        transform: scale(0.97);
+      }
+
+      .btn-decline {
+        background: #0b50e3;
+        color: #fff;
+      }
+
+      .btn-accept {
+        background: linear-gradient(135deg, #0b50e3, #0b50e3);
+        color: #fff;
+      }
+
+      /* Scrollbar styling */
+      .tc-content::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .tc-content::-webkit-scrollbar-thumb {
+        background: #ddd;
+        border-radius: 4px;
+      }
+
+      /* Confirmation toast */
+      .tc-toast {
+        position: fixed;
+        top: 28px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-20px);
+        background: #0b50e3;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 12px 22px;
+        border-radius: 999px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+        z-index: 1000;
+      }
+
+      .tc-toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .tc-toast-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.25);
+        font-size: 11px;
+      }
+
+      /* Responsive */
+      @media (max-width: 640px) {
+        .tc-body {
+          flex-direction: column;
+        }
+
+        .tc-sidebar {
+          width: 100%;
+          border-right: none;
+          border-bottom: 1px solid #eee;
+          display: flex;
+          overflow-x: auto;
+          padding: 8px 0;
+        }
+
+        .tc-nav-item {
+          white-space: nowrap;
+          border-left: none;
+          border-bottom: 3px solid transparent;
+          padding: 10px 16px;
+        }
+
+        .tc-nav-item.active {
+          border-left: none;
+          border-bottom-color: #0b50e3;
+        }
+
+        .tc-footer {
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tc-card">
+      <!-- Header -->
+      <div class="tc-header">
+        <button class="tc-back" aria-label="Go back">&#8592;</button>
+        <h1>Terms & Condition</h1>
+      </div>
+
+      <div class="tc-body">
+        <!-- Sidebar -->
+        <nav class="tc-sidebar" id="tc-sidebar">
+          <div class="tc-nav-item active" data-target="panel-home">Home</div>
+          <div class="tc-nav-item" data-target="panel-privacy">
+            Privacy Policy
+          </div>
+          <div class="tc-nav-item" data-target="panel-agreement">
+            User Agreement
+          </div>
+          <div class="tc-nav-item" data-target="panel-data">
+            Data Collection &amp; Usage
+          </div>
+          <div class="tc-nav-item" data-target="panel-grading">
+            Grading &amp; Assessment
+          </div>
+          <div class="tc-nav-item" data-target="panel-payment">
+            Payment &amp; Subscription
+          </div>
+          <div class="tc-nav-item" data-target="panel-consent">
+            Consent &amp; Permissions
+          </div>
+          <div class="tc-nav-item" data-target="panel-responsibilities">
+            User Responsibilities
+          </div>
+          <div class="tc-nav-item" data-target="panel-prohibited">
+            Prohibited Activities
+          </div>
+        </nav>
+
+        <!-- Content -->
+        <div class="tc-content" id="tc-content">
+          <!-- HOME -->
+          <div class="tc-panel active" id="panel-home">
+            <div class="tc-welcome">
+              <h2>Welcome!</h2>
+              <p>
+                These Terms and Conditions govern your use of our mobile
+                application and related services. Please read these Terms
+                carefully. By downloading, installing, or using our App, you
+                agree to be bound by these Terms.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>1. Acceptance of Terms</h3>
+              <p>
+                By accessing or using this app, you agree to comply with these
+                Terms and all applicable laws and regulations. If you are using
+                the app on behalf of an organization, you represent that you
+                have the authority to bind that organization to these Terms.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>2. Eligibility</h3>
+              <p>
+                You must be at least 18 years old or have the consent of a
+                parent or guardian to use the app. By using the app, you affirm
+                that you meet these eligibility requirements.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>3. Account Registration</h3>
+              <p>
+                Some features may require creating an account. You agree to:
+              </p>
+              <ul>
+                <li>Provide accurate, complete, and current information.</li>
+                <li>Keep your login credentials confidential.</li>
+                <li>
+                  Notify us immediately of any unauthorized use of your account.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- PRIVACY POLICY -->
+          <div class="tc-panel" id="panel-privacy">
+            <div class="tc-panel-title">Privacy Policy</div>
+            <div class="tc-updated">Last updated: September 2026</div>
+
+            <div class="tc-section">
+              <h3>1. Information We Collect</h3>
+              <p>
+                We collect information you provide directly, such as your name,
+                email address, role (student or lecturer), and password, as well
+                as information generated through your use of the platform,
+                including course activity, assignment submissions, and login
+                timestamps.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>2. How We Use Your Information</h3>
+              <ul>
+                <li>To create and manage your account.</li>
+                <li>To deliver course content, assignments, and grades.</li>
+                <li>To communicate important updates about your courses.</li>
+                <li>To improve the platform's performance and features.</li>
+              </ul>
+            </div>
+
+            <div class="tc-section">
+              <h3>3. Data Sharing</h3>
+              <p>
+                We do not sell your personal information. Data may be shared
+                with instructors, administrators, or institutions solely for
+                academic and administrative purposes, or where required by law.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>4. Data Retention</h3>
+              <p>
+                We retain your information for as long as your account is active
+                or as needed to comply with legal, academic record-keeping, or
+                reporting obligations.
+              </p>
+            </div>
+          </div>
+
+          <!-- USER AGREEMENT -->
+          <div class="tc-panel" id="panel-agreement">
+            <div class="tc-panel-title">User Agreement</div>
+            <div class="tc-updated">Last updated: September 2026</div>
+
+            <div class="tc-section">
+              <h3>1. Your Role on the Platform</h3>
+              <p>
+                As a student or lecturer, you agree to use the platform only for
+                its intended academic purposes, including enrolling in or
+                managing courses, submitting or grading assignments, and
+                communicating with other users.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>2. Content Ownership</h3>
+              <p>
+                Course materials, assignments, and other content you upload
+                remain your intellectual property, but you grant the platform a
+                limited license to store, display, and process this content for
+                the purpose of delivering our services.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>3. Account Suspension</h3>
+              <p>
+                We reserve the right to suspend or terminate accounts that
+                violate this Agreement, engage in academic dishonesty, or misuse
+                platform features.
+              </p>
+            </div>
+          </div>
+
+          <!-- DATA COLLECTION & USAGE -->
+          <div class="tc-panel" id="panel-data">
+            <div class="tc-panel-title">Data Collection &amp; Usage</div>
+            <div class="tc-updated">Last updated: September 2026</div>
+
+            <div class="tc-section">
+              <h3>1. Types of Data Collected</h3>
+              <ul>
+                <li>Account information (name, email, role).</li>
+                <li>Academic data (courses, grades, submissions).</li>
+                <li>Usage data (login times, pages visited, device type).</li>
+              </ul>
+            </div>
+
+            <div class="tc-section">
+              <h3>2. Purpose of Collection</h3>
+              <p>
+                Data is collected to operate core features of the platform,
+                personalize your dashboard, track academic progress, and
+                maintain system security.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>3. Cookies & Similar Technologies</h3>
+              <p>
+                We may use cookies or local storage to keep you signed in and
+                remember your preferences. You can control cookie settings
+                through your browser.
+              </p>
+            </div>
+          </div>
+
+          <!-- GRADING & ASSESSMENT -->
+          <div class="tc-panel" id="panel-grading">
+            <div class="tc-panel-title">Grading &amp; Assessment</div>
+            <div class="tc-updated">Last updated: September 2026</div>
+
+            <div class="tc-section">
+              <h3>1. How Grades Are Recorded</h3>
+              <p>
+                Grades and assessment results entered by lecturers are recorded
+                on the platform and linked to your student account. We do not
+                alter, dispute, or verify the accuracy of grades submitted by
+                instructors; grading decisions remain the responsibility of the
+                lecturer or institution.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>2. Viewing Your Grades</h3>
+              <p>
+                Access to view your recorded grades is a premium feature and
+                requires an active paid subscription as described in our Payment
+                &amp; Subscription terms. Submitting assignments and
+                participating in courses does not require payment; only checking
+                your grades does.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>3. Grade Disputes</h3>
+              <p>
+                If you believe a grade was recorded in error, disputes must be
+                raised directly with the relevant lecturer or your institution's
+                academic office. We are not responsible for resolving academic
+                grading disputes.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>4. Accuracy & Availability</h3>
+              <p>
+                While we take reasonable steps to keep grade records accurate
+                and available, we do not guarantee uninterrupted access and are
+                not liable for delays caused by technical issues, lecturer
+                submission delays, or third-party payment processing.
+              </p>
+            </div>
+          </div>
+
+          <!-- PAYMENT & SUBSCRIPTION -->
+          <div class="tc-panel" id="panel-payment">
+            <div class="tc-panel-title">Payment &amp; Subscription</div>
+            <div class="tc-updated">Last updated: September 2026</div>
+
+            <div class="tc-section">
+              <h3>1. What Requires Payment</h3>
+              <p>
+                Creating an account, enrolling in courses, submitting
+                assignments, and general use of the app are free. Only
+                <strong>viewing your grades</strong>
+                is a paid feature. You will be prompted to pay before grade
+                information is unlocked and displayed on your dashboard.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>2. Fees & Billing</h3>
+              <ul>
+                <li>
+                  Grade-checking may be billed as a one-time fee per grading
+                  period or as a recurring subscription, as shown at checkout.
+                </li>
+                <li>
+                  All prices are displayed in advance before you are charged.
+                </li>
+                <li>
+                  Payments are processed securely through our third-party
+                  payment provider; we do not store your full card details.
+                </li>
+              </ul>
+            </div>
+
+            <div class="tc-section">
+              <h3>3. Refunds</h3>
+              <p>
+                Payments made to unlock grade access are generally
+                non-refundable once your grades have been successfully
+                displayed. If a payment was charged in error or grades failed to
+                unlock due to a technical fault on our end, contact support for
+                a refund review.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>4. Subscription Renewal & Cancellation</h3>
+              <p>
+                If grade access is offered as a recurring subscription, it will
+                automatically renew at the end of each billing cycle unless
+                cancelled beforehand. You may cancel at any time through your
+                account settings; cancellation stops future charges but does not
+                retroactively refund the current billing period.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>5. Price Changes</h3>
+              <p>
+                We may update grade-checking fees from time to time. Any price
+                changes will be communicated in advance and will apply only to
+                future billing cycles, not payments already made.
+              </p>
+            </div>
+          </div>
+
+          <!-- CONSENT & PERMISSIONS -->
+          <div class="tc-panel" id="panel-consent">
+            <div class="tc-panel-title">Consent &amp; Permissions</div>
+            <div class="tc-updated">Last updated: September 2026</div>
+
+            <div class="tc-section">
+              <h3>1. Consent to Terms</h3>
+              <p>
+                By clicking "Accept," you confirm that you have read,
+                understood, and agree to these Terms, our Privacy Policy, and
+                any related policies referenced here.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>2. Device & App Permissions</h3>
+              <p>
+                The app may request permission to access your camera, storage,
+                or notifications to support features like assignment uploads and
+                reminder alerts. You may manage these permissions in your device
+                settings at any time.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>3. Withdrawing Consent</h3>
+              <p>
+                You may withdraw consent at any time by contacting support or
+                deleting your account, though this may limit your ability to use
+                certain features.
+              </p>
+            </div>
+          </div>
+
+          <!-- USER RESPONSIBILITIES -->
+          <div class="tc-panel" id="panel-responsibilities">
+            <div class="tc-panel-title">User Responsibilities</div>
+            <div class="tc-updated">Last updated: September 2026</div>
+
+            <div class="tc-section">
+              <h3>1. Accurate Information</h3>
+              <p>
+                You are responsible for ensuring the information on your profile
+                remains accurate and up to date, including your name, email, and
+                role.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>2. Academic Integrity</h3>
+              <p>
+                You agree to complete assignments and assessments honestly,
+                without plagiarism, impersonation, or unauthorized assistance.
+              </p>
+            </div>
+
+            <div class="tc-section">
+              <h3>3. Account Security</h3>
+              <ul>
+                <li>Keep your password confidential.</li>
+                <li>Log out of shared or public devices after each session.</li>
+                <li>Report suspected unauthorized access immediately.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- PROHIBITED ACTIVITIES -->
+          <div class="tc-panel" id="panel-prohibited">
+            <div class="tc-panel-title">Prohibited Activities</div>
+            <div class="tc-updated">Last updated: September 2026</div>
+
+            <div class="tc-section">
+              <h3>You agree not to:</h3>
+              <ul>
+                <li>Share your account credentials with others.</li>
+                <li>Upload harmful, offensive, or unlawful content.</li>
+                <li>
+                  Attempt to access another user's account or data without
+                  authorization.
+                </li>
+                <li>
+                  Interfere with or disrupt the platform's servers or networks.
+                </li>
+                <li>
+                  Use the platform for any fraudulent or academically dishonest
+                  purpose.
+                </li>
+                <li>
+                  Reverse engineer, decompile, or scrape the platform without
+                  permission.
+                </li>
+              </ul>
+            </div>
+
+            <div class="tc-section">
+              <h3>Consequences</h3>
+              <p>
+                Violating these rules may result in suspension or permanent
+                termination of your account, and may be reported to your
+                institution where applicable.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="tc-footer">
+        <button class="btn btn-decline" id="tc-decline">Decline</button>
+        <button class="btn btn-accept" id="tc-accept">Accept</button>
+      </div>
+    </div>
+
+    <!-- Confirmation toast shown after clicking Accept -->
+    <div class="tc-toast" id="tc-toast">
+      <span class="tc-toast-icon">&#10003;</span>
+      <span id="tc-toast-text">Accepted</span>
+    </div>
+
+    <script>
+      const navItems = document.querySelectorAll(".tc-nav-item");
+      const panels = document.querySelectorAll(".tc-panel");
+      const contentEl = document.getElementById("tc-content");
+
+      navItems.forEach((item) => {
+        item.addEventListener("click", () => {
+          navItems.forEach((el) => el.classList.remove("active"));
+          panels.forEach((el) => el.classList.remove("active"));
+
+          item.classList.add("active");
+          document.getElementById(item.dataset.target).classList.add("active");
+          contentEl.scrollTop = 0;
+        });
+      });
+
+      const REGISTER_URL = "/accounts/register/";
+      const toastEl = document.getElementById("tc-toast");
+      const toastTextEl = document.getElementById("tc-toast-text");
+
+      function showToast(message, onDone) {
+        toastTextEl.textContent = message;
+        toastEl.classList.add("show");
+        setTimeout(() => {
+          toastEl.classList.remove("show");
+          if (typeof onDone === "function") onDone();
+        }, 1400);
+      }
+
+      document.getElementById("tc-decline").addEventListener("click", () => {
+        // User declined: make sure no stale acceptance is left behind
+        sessionStorage.removeItem("terms_accepted");
+        window.location.href = REGISTER_URL;
+      });
+
+      document.getElementById("tc-accept").addEventListener("click", () => {
+        // Remember that this browser session has accepted the terms
+        sessionStorage.setItem("terms_accepted", "true");
+        showToast("Accepted", () => {
+          window.location.href = REGISTER_URL;
+        });
+      });
+    </script>
+  </body>
+</html>

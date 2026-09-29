@@ -39,6 +39,7 @@ urlpatterns = [
     # Create an admin user first: python manage.py createsuperuser
     path("", lambda request: redirect("accounts:login")),
     path("admin/", admin.site.urls),
+    #path('api/auth/', include('apps.accounts.urls')),
 
     # include() says: "For any URL starting with 'accounts/', let apps/accounts/urls.py handle the rest"
     # Example: /accounts/login/ → accounts/urls.py looks for "login/" → calls login_view
