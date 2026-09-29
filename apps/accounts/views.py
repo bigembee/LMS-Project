@@ -80,6 +80,9 @@ class RegisterView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        # Create a Django session as well as issuing JWTs so the dashboard
+        # redirect and @login_required views recognize the new user.
+        login(request, user)
 
         # Optional: issue JWT immediately after registration
         refresh = RefreshToken.for_user(user)
