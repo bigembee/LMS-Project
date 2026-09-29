@@ -24,7 +24,7 @@ FUNCTIONS USED:
 """
 
 from django.shortcuts import render, redirect                   # render templates, redirect to URLs
-from django.contrib.auth import login, logout                   # Django's login/logout functions
+from django.contrib.auth import authenticate, login, logout       # Django authentication helpers
 from django.contrib.auth.decorators import login_required       # Decorator: must be logged in to access
 from django.contrib import messages                             # Flash messages ("Success!", "Error!")
 
@@ -34,6 +34,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import RegisterSerializer
 from .forms import RegistrationForm
+from .models import User
 
 def register_view(request):
     """
@@ -88,6 +89,10 @@ class RegisterView(generics.CreateAPIView):
             "refresh": str(refresh),
         }, status=201)
 
+def password_confirmation_view(request):
+    """Render the second registration step where the password is confirmed."""
+    return render(request, "accounts/password_confirmation.html")
+
 def terms_view(request):
     """
     Handle user login.
@@ -103,18 +108,27 @@ def terms_view(request):
     return render(request,'accounts/terms.html')
 
 def login_view(request):
-    """
-    Handle user login.
+    """Authenticate a user and redirect them to their role dashboard."""
+    if request.method == "POST":
+        identifier = request.POST.get("email", "").strip()
+        password = request.POST.get("password", "")
 
-    GET request: Display the login form
-    POST request: Validate credentials, log user in, redirect to dashboard
+        # The interface accepts either an email address or a username.
+        user = User.objects.filter(email__iexact=identifier).first()
+        username = user.username if user else identifier
+        authenticated_user = authenticate(request, username=username, password=password)
 
-    FLOW: User visits /accounts/login/ → enters username & password → submits →
-          Django checks credentials → if valid, creates a session → redirect to dashboard
+        if authenticated_user is not None:
+            login(request, authenticated_user)
+            return redirect("accounts:dashboard_redirect")
 
-    TODO: Implement this — use LoginForm from forms.py or Django's AuthenticationForm
-    """
-    return render(request,'accounts/login.html')
+        return render(
+            request,
+            "accounts/login.html",
+            {"login_error": "Invalid email/username or password."},
+        )
+
+    return render(request, "accounts/login.html")
 
 
 

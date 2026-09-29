@@ -312,14 +312,16 @@
         <h1>Welcome back to LMS</h1>
         <p class="subtitle">Your lecture room made remote.</p>
 
-        <div class="error" id="error-msg"></div>
+        <div class="error{% if login_error %} visible{% endif %}" id="error-msg">{{ login_error }}</div>
 
-        <form id="login-form">
+        <form id="login-form" method="post" action="{% url 'accounts:login' %}">
+          {% csrf_token %}
           <div class="field">
             <label for="email">Email</label>
             <input
               type="email"
               id="email"
+              name="email"
               placeholder="user@gmail.com"
               required
             />
@@ -330,6 +332,7 @@
             <input
               type="password"
               id="password"
+              name="password"
               placeholder="••••••••••"
               required
             />
@@ -382,51 +385,7 @@
     </div>
 
     <script>
-      const API_URL = "http://127.0.0.1:8000/accounts/login/";
-      const form = document.getElementById("login-form");
-      const errorEl = document.getElementById("error-msg");
-      const submitBtn = document.getElementById("submit-btn");
-
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        errorEl.classList.remove("visible");
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Logging in...";
-
-        // Note: your User model's USERNAME_FIELD is "email", so
-        // simplejwt's TokenObtainPairView expects the key "email" here.
-        const payload = {
-          email: document.getElementById("email").value,
-          password: document.getElementById("password").value,
-        };
-
-        try {
-          const res = await fetch(API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          });
-          const data = await res.json();
-
-          if (!res.ok) {
-            const messages = Object.values(data).flat().join(" ");
-            errorEl.textContent = messages || "Invalid email or password.";
-            errorEl.classList.add("visible");
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Log in";
-            return;
-          }
-
-          localStorage.setItem("access_token", data.access);
-          localStorage.setItem("refresh_token", data.refresh);
-          window.location.href = "/dashboard.html";
-        } catch (err) {
-          errorEl.textContent = "Network error. Please try again.";
-          errorEl.classList.add("visible");
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Log in";
-        }
-      });
+      // The form is submitted normally so Django can create the authenticated session.
     </script>
   </body>
 </html>

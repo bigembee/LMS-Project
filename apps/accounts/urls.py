@@ -36,6 +36,7 @@ urlpatterns = [
     # /accounts/register/ → register_view() → shows/processes registration form
     path("register/", views.register_view, name="register"),
     path("register-api/", views.RegisterView.as_view(), name="register_api"),
+    path("password-confirmation/", views.password_confirmation_view, name="password_confirmation"),
 
     # /accounts/register/ → register_view() → shows/processes registration form
     path("terms/", views.terms_view, name="terms"),

@@ -118,6 +118,77 @@
         background: #ffffff;
         box-shadow: 0 0 0 3px rgba(240, 190, 90, 0.35);
       }
+      .name-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .name-row .field {
+        min-width: 0;
+      }
+      .role-picker {
+        position: relative;
+      }
+      .role-button {
+        width: 100%;
+        padding: 14px 18px;
+        border: none;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.55);
+        color: #1f2430;
+        font: inherit;
+        font-size: 14px;
+        text-align: left;
+        cursor: pointer;
+      }
+      .role-button::after {
+        content: "⌄";
+        float: right;
+        font-size: 18px;
+        line-height: 1;
+      }
+      .role-button:focus,
+      .role-button[aria-expanded="true"] {
+        outline: none;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(240, 190, 90, 0.35);
+      }
+      .role-menu {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: calc(100% + 8px);
+        z-index: 10;
+        display: none;
+        padding: 8px;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+      }
+      .role-menu.show {
+        display: block;
+      }
+      .role-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        padding: 10px 12px;
+        border-radius: 10px;
+        color: #1f2430;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .role-option:hover {
+        background: #f1f4f9;
+      }
+      .role-option input {
+        width: 16px;
+        height: 16px;
+        padding: 0;
+        accent-color: #0b50e3;
+      }
+
       .toggle-pw {
         position: absolute;
         right: 18px;
@@ -336,9 +407,36 @@
 
         <form id="register-form">
           {% csrf_token %}
+          <div class="name-row">
+            <div class="field">
+              <label for="first_name">First name</label>
+              <input
+                type="text"
+                id="first_name"
+                placeholder="First name"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="last_name">Last name</label>
+              <input
+                type="text"
+                id="last_name"
+                placeholder="Last name"
+                required
+              />
+            </div>
+          </div>
+
           <div class="field">
-            <label for="username">Full name</label>
-            <input type="text" id="username" placeholder="User" required />
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              placeholder="Choose a username"
+              autocomplete="username"
+              required
+            />
           </div>
 
           <div class="field">
@@ -351,12 +449,28 @@
             />
           </div>
 
-          <div class="field">
-            <label for="role">I am a</label>
-            <select id="role">
-              <option value="student">Student</option>
-              <option value="lecturer">Lecturer</option>
-            </select>
+          <div class="field role-picker">
+            <label for="role-button">I am a</label>
+            <input type="hidden" id="role" value="student" />
+            <button
+              type="button"
+              class="role-button"
+              id="role-button"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Student
+            </button>
+            <div class="role-menu" id="role-menu" role="group" aria-label="Select a role">
+              <label class="role-option">
+                <input type="checkbox" name="role-option" value="student" checked />
+                <span>Student</span>
+              </label>
+              <label class="role-option">
+                <input type="checkbox" name="role-option" value="lecturer" />
+                <span>Lecturer</span>
+              </label>
+            </div>
           </div>
 
           <div class="field">
@@ -369,19 +483,6 @@
                 required
               />
               <span class="toggle-pw" onclick="togglePw('password')">👁</span>
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="password2">Confirm password</label>
-            <div class="input-wrap">
-              <input
-                type="password"
-                id="password2"
-                placeholder="••••••••••••"
-                required
-              />
-              <span class="toggle-pw" onclick="togglePw('password2')">👁</span>
             </div>
           </div>
 
@@ -438,7 +539,7 @@
     </div>
 
     <script>
-      const API_URL = "{% url 'accounts:register_api' %}";
+      const PASSWORD_CONFIRMATION_URL = "{% url 'accounts:password_confirmation' %}";
       const TERMS_URL = "{% url 'accounts:terms' %}";
       const DASHBOARD_URL = "{% url 'accounts:dashboard_redirect' %}";
 
@@ -447,16 +548,52 @@
       const submitBtn = document.getElementById("submit-btn");
       const termsModal = document.getElementById("terms-modal");
       const termsLink = document.getElementById("terms-link");
+      const roleButton = document.getElementById("role-button");
+      const roleMenu = document.getElementById("role-menu");
+      const roleInput = document.getElementById("role");
+      const roleOptions = [...document.querySelectorAll("input[name=role-option]")];
 
       const DRAFT_KEY = "register_form_draft";
       const TERMS_FLAG = "terms_accepted";
 
-      const FIELD_IDS = ["username", "email", "role", "password", "password2"];
+      const FIELD_IDS = ["first_name", "last_name", "username", "email", "role", "password"];
 
       function togglePw(id) {
         const el = document.getElementById(id);
         el.type = el.type === "password" ? "text" : "password";
       }
+
+      function setRole(role) {
+        roleInput.value = role;
+        roleButton.textContent = role === "lecturer" ? "Lecturer" : "Student";
+        roleOptions.forEach((option) => {
+          option.checked = option.value === role;
+        });
+      }
+
+      roleButton.addEventListener("click", () => {
+        const isOpen = roleMenu.classList.toggle("show");
+        roleButton.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      roleOptions.forEach((option) => {
+        option.addEventListener("change", () => {
+          if (option.checked) {
+            setRole(option.value);
+            roleMenu.classList.remove("show");
+            roleButton.setAttribute("aria-expanded", "false");
+          } else {
+            option.checked = true;
+          }
+        });
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest(".role-picker")) {
+          roleMenu.classList.remove("show");
+          roleButton.setAttribute("aria-expanded", "false");
+        }
+      });
 
       function showError(html) {
         errorEl.innerHTML = html;
@@ -504,6 +641,7 @@
         } catch (err) {
           // A corrupted draft should never break the page.
         }
+        setRole(document.getElementById("role").value || "student");
         // Remove it straight away so the password doesn't linger in storage.
         sessionStorage.removeItem(DRAFT_KEY);
       }
@@ -547,67 +685,18 @@
       // ---------------------------------------------------------------
       // Submit
       // ---------------------------------------------------------------
-      form.addEventListener("submit", async (e) => {
+      form.addEventListener("submit", (e) => {
         e.preventDefault();
         hideError();
 
-        // 🔒 Terms gate: no registration request is sent until the user
-        // has accepted the Terms & Conditions.
+        // Terms must be accepted before moving to password confirmation.
         if (!termsAccepted) {
           openTermsModal();
           return;
         }
 
-        const password = document.getElementById("password").value;
-        const password2 = document.getElementById("password2").value;
-
-        if (password !== password2) {
-          showError("Passwords do not match.");
-          return;
-        }
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Creating account...";
-
-        const payload = {
-          username: document.getElementById("username").value,
-          email: document.getElementById("email").value,
-          role: document.getElementById("role").value,
-          password: password,
-          password2: password2,
-          terms_accepted: true, // 🔒 the backend should verify this too
-        };
-
-        try {
-          const res = await fetch(API_URL, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-CSRFToken": getCsrfToken(),
-            },
-            body: JSON.stringify(payload),
-          });
-          const data = await res.json();
-
-          if (!res.ok) {
-            const messages = Object.values(data).flat().join(" ");
-            showError(messages || "Registration failed.");
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Next";
-            return;
-          }
-
-          // Registration succeeded — clean up session state and log in.
-          sessionStorage.removeItem(DRAFT_KEY);
-          sessionStorage.removeItem(TERMS_FLAG);
-          localStorage.setItem("access_token", data.access);
-          localStorage.setItem("refresh_token", data.refresh);
-          window.location.href = DASHBOARD_URL;
-        } catch (err) {
-          showError("Network error. Please try again.");
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Next";
-        }
+        saveDraft();
+        window.location.href = PASSWORD_CONFIRMATION_URL;
       });
     </script>
   </body>
