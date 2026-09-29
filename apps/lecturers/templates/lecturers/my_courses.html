@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>My Courses</h1>
+
+{% if courses %}
+    <ul>
+        {% for course in courses %}
+            <li>
+                <strong>{{ course.code }}</strong> — {{ course.title }}
+                <br>
+                Department: {{ course.department.name }}
+                <br>
+                Semester: {{ course.semester }}
+                <br>
+                <a href="{% url 'lecturers:manage_course' pk=course.pk %}">Manage this course</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>You are not currently assigned to teach any courses.</p>
+{% endif %}
+{% endblock %}

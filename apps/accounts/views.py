@@ -27,6 +27,7 @@ from django.shortcuts import render, redirect                   # render templat
 from django.contrib.auth import login, logout                   # Django's login/logout functions
 from django.contrib.auth.decorators import login_required       # Decorator: must be logged in to access
 from django.contrib import messages                             # Flash messages ("Success!", "Error!")
+from django.contrib.auth.forms import AuthenticationForm
 
 
 def register_view(request):
@@ -58,16 +59,17 @@ def register_view(request):
 def login_view(request):
     """
     Handle user login.
-
-    GET request: Display the login form
-    POST request: Validate credentials, log user in, redirect to dashboard
-
-    FLOW: User visits /accounts/login/ → enters username & password → submits →
-          Django checks credentials → if valid, creates a session → redirect to dashboard
-
-    TODO: Implement this — use LoginForm from forms.py or Django's AuthenticationForm
     """
-    return render(request, "accounts/login.html")
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect("accounts:dashboard_redirect")
+    else:
+        form = AuthenticationForm()
+
+    return render(request, "accounts/login.html", {"form": form})
 
 
 def logout_view(request):

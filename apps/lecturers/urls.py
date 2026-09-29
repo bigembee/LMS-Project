@@ -11,15 +11,15 @@ FULL URL MAP:
     /lecturers/assignments/5/submissions/       → View all submissions for an assignment
     /lecturers/submissions/5/grade/             → Grade a specific submission
     /lecturers/announcements/create/            → Post a new announcement
-"""
 
+"""
 from django.urls import path
 from . import views
 
 app_name = "lecturers"  # Namespace: "lecturers:dashboard", "lecturers:my_courses", etc.
 
 urlpatterns = [
-    # Dashboard — lecturer's home page
+    # Dashboard — lecturer's home pageS
     path("dashboard/", views.dashboard, name="dashboard"),
 
     # List all courses this lecturer teaches
