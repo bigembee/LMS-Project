@@ -7,7 +7,7 @@
     <title>Create an account</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Parisienne&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -67,8 +67,10 @@
         border: 1px solid rgba(0, 0, 0, 0.15);
         border-radius: 999px;
         padding: 8px 20px;
-        font-weight: 600;
-        font-size: 14px;
+        font-weight: 400;
+        font-size: 32px;
+        font-family: "Parisienne", cursive;
+        color: #0b50e3;
         margin-bottom: 60px;
       }
       .heading {
@@ -396,7 +398,7 @@
   <body>
     <div class="shell">
       <div class="left">
-        <div class="logo">LMS</div>
+        <div class="logo">Edvance</div>
 
         <div class="heading">
           <h1>Create an account</h1>
@@ -461,9 +463,19 @@
             >
               Student
             </button>
-            <div class="role-menu" id="role-menu" role="group" aria-label="Select a role">
+            <div
+              class="role-menu"
+              id="role-menu"
+              role="group"
+              aria-label="Select a role"
+            >
               <label class="role-option">
-                <input type="checkbox" name="role-option" value="student" checked />
+                <input
+                  type="checkbox"
+                  name="role-option"
+                  value="student"
+                  checked
+                />
                 <span>Student</span>
               </label>
               <label class="role-option">
@@ -539,7 +551,8 @@
     </div>
 
     <script>
-      const PASSWORD_CONFIRMATION_URL = "{% url 'accounts:password_confirmation' %}";
+      const PASSWORD_CONFIRMATION_URL =
+        "{% url 'accounts:password_confirmation' %}";
       const TERMS_URL = "{% url 'accounts:terms' %}";
       const DASHBOARD_URL = "{% url 'accounts:dashboard_redirect' %}";
 
@@ -551,12 +564,21 @@
       const roleButton = document.getElementById("role-button");
       const roleMenu = document.getElementById("role-menu");
       const roleInput = document.getElementById("role");
-      const roleOptions = [...document.querySelectorAll("input[name=role-option]")];
+      const roleOptions = [
+        ...document.querySelectorAll("input[name=role-option]"),
+      ];
 
       const DRAFT_KEY = "register_form_draft";
       const TERMS_FLAG = "terms_accepted";
 
-      const FIELD_IDS = ["first_name", "last_name", "username", "email", "role", "password"];
+      const FIELD_IDS = [
+        "first_name",
+        "last_name",
+        "username",
+        "email",
+        "role",
+        "password",
+      ];
 
       function togglePw(id) {
         const el = document.getElementById(id);

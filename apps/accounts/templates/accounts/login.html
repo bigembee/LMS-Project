@@ -24,7 +24,7 @@
     <title>Log in</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Parisienne&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -113,10 +113,18 @@
         max-width: 380px;
       }
       .form-wrap h1 {
+        margin-bottom: 8px;
+        color: #111827;
         font-size: 26px;
         font-weight: 700;
-        color: #111827;
-        margin-bottom: 8px;
+        line-height: 1.2;
+      }
+      .form-wrap h1 .edvance-word {
+        color: #0b50e3;
+        font-family: "Parisienne", cursive;
+        font-size: 46px;
+        font-weight: 400;
+        line-height: 1;
       }
       .form-wrap .subtitle {
         font-size: 14px;
@@ -299,7 +307,7 @@
   </head>
   <body>
     <div class="left">
-      <div class="logo"><span class="logo-mark"></span> LMS</div>
+      <div class="logo"><span class="logo-mark"></span> edvance</div>
       <div class="quote">
         <p>&ldquo;My Virtual Classroom!!! .&rdquo;</p>
         <div class="author">Table Five</div>
@@ -309,10 +317,15 @@
 
     <div class="right">
       <div class="form-wrap">
-        <h1>Welcome back to LMS</h1>
+        <h1>Welcome back to <span class="edvance-word">Edvance</span></h1>
         <p class="subtitle">Your lecture room made remote.</p>
 
-        <div class="error{% if login_error %} visible{% endif %}" id="error-msg">{{ login_error }}</div>
+        <div
+          class="error{% if login_error %} visible{% endif %}"
+          id="error-msg"
+        >
+          {{ login_error }}
+        </div>
 
         <form id="login-form" method="post" action="{% url 'accounts:login' %}">
           {% csrf_token %}
