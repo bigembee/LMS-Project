@@ -1,6 +1,1726 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lecturer Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-{% block content %}
-  <h1>Dashboard</h1>
-  <p>Welcome to your dashboard!</p>
-{% endblock %}
+  <style>
+    :root {
+      --brand: #0b50e3;
+      --brand-dark: #0840b5;
+      --navy: #062a7a;
+      --tint: #eaf1ff;
+      --surface: #f6f8fc;
+      --line: #e3e8f2;
+      --text: #111a33;
+      --muted: #6b7794;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      color: var(--text);
+      background: var(--brand);
+      min-height: 100vh;
+      padding: 24px 20px;
+      font-size: 13px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Icons */
+    .i {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    .i.sm {
+      width: 15px;
+      height: 15px;
+    }
+
+    .shell {
+      max-width: 1360px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 232px 1fr;
+      gap: 20px;
+    }
+
+    /* ---------- Sidebar ---------- */
+    .sidebar {
+      background: var(--navy);
+      color: #fff;
+      border-radius: 18px;
+      padding: 22px 14px;
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 24px;
+      height: calc(100vh - 48px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 17px;
+      font-weight: 700;
+      padding: 0 10px 22px;
+      letter-spacing: .2px;
+    }
+
+    .brand .mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--brand);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .nav-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #7f93c9;
+      padding: 0 12px 8px;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow-y: auto;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #b8c6ee;
+    }
+
+    .nav a:hover {
+      background: rgba(255,255,255,.08);
+      color: #fff;
+    }
+
+    .nav a.active {
+      background: var(--brand);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .nav .count {
+      margin-left: auto;
+      background: #fff;
+      color: var(--brand);
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 10px;
+      padding: 2px 7px;
+    }
+
+    .logout {
+      margin-top: auto;
+      border-top: 1px solid rgba(255,255,255,.12);
+      padding-top: 14px;
+    }
+
+    .logout a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #b8c6ee;
+    }
+
+    .logout a:hover {
+      background: rgba(255,255,255,.08);
+      color: #fff;
+    }
+
+    /* ---------- Main ---------- */
+    .main {
+      background: #fff;
+      border-radius: 18px;
+      padding: 24px 28px 30px;
+      min-width: 0;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      max-width: 380px;
+    }
+
+    .search-wrap .i {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      width: 16px;
+      height: 16px;
+    }
+
+    .search {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 14px 10px 38px;
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--text);
+      outline: none;
+    }
+
+    .search:focus {
+      border-color: var(--brand);
+      background: #fff;
+    }
+
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      color: var(--text);
+    }
+
+    .icon-btn:hover {
+      border-color: var(--brand);
+      color: var(--brand);
+    }
+
+    .icon-btn .dot {
+      position: absolute;
+      top: 8px;
+      right: 9px;
+      width: 7px;
+      height: 7px;
+      background: var(--brand);
+      border-radius: 50%;
+      border: 2px solid var(--surface);
+    }
+
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 10px;
+      margin-left: 4px;
+      border-left: 1px solid var(--line);
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .who {
+      line-height: 1.3;
+    }
+
+    .who b {
+      font-size: 13px;
+      display: block;
+      font-weight: 600;
+    }
+
+    .who small {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .greet {
+      margin-top: 22px;
+    }
+
+    .greet small {
+      font-size: 13px;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .greet h2 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -.3px;
+    }
+
+    .greet p {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .quick {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .qbtn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #fff;
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .qbtn:hover {
+      border-color: var(--brand);
+      color: var(--brand);
+    }
+
+    .qbtn.primary {
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
+    }
+
+    .qbtn.primary:hover {
+      background: var(--brand-dark);
+      color: #fff;
+    }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .stat {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stat .ico {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: var(--tint);
+      color: var(--brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stat b {
+      display: block;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .stat span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .col {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .card-head h3 {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .card-head a {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--brand);
+    }
+
+    .card-head a:hover {
+      text-decoration: underline;
+    }
+
+    .empty {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      padding: 14px;
+      background: #fff;
+      border: 1px dashed var(--line);
+      border-radius: 10px;
+    }
+
+    /* Courses */
+    .courses {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .course {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .course .code {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--brand);
+      letter-spacing: .6px;
+    }
+
+    .course b {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin: 4px 0 10px;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .progress {
+      height: 5px;
+      border-radius: 5px;
+      background: var(--tint);
+      overflow: hidden;
+    }
+
+    .progress i {
+      display: block;
+      height: 100%;
+      background: var(--brand);
+      border-radius: 5px;
+    }
+
+    .next {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    /* Table */
+    .tbl {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .tbl th {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: var(--muted);
+      text-align: left;
+      padding: 10px 14px;
+      font-weight: 600;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tbl td {
+      padding: 12px 14px;
+      font-size: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tbl tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .tbl td:first-child {
+      font-weight: 600;
+    }
+
+    .tbl td:last-child {
+      text-align: right;
+    }
+
+    .tbl small {
+      display: block;
+      font-weight: 400;
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 2px;
+    }
+
+    .grade-btn {
+      background: var(--brand);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    .grade-btn:hover {
+      background: var(--brand-dark);
+    }
+
+    .chip {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: var(--tint);
+      color: var(--brand);
+    }
+
+    /* Performance bars */
+    .perf {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      gap: 8px;
+      padding-top: 6px;
+    }
+
+    .pcol {
+      text-align: center;
+      flex: 1;
+      max-width: 70px;
+    }
+
+    .pv {
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .pbar {
+      height: 110px;
+      width: 24px;
+      margin: 0 auto;
+      border-radius: 6px;
+      background: var(--tint);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pbar i {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--brand);
+      border-radius: 6px;
+    }
+
+    .pl {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 8px;
+      line-height: 1.2;
+    }
+
+    /* Week + ring */
+    .date-line {
+      font-size: 12px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .date-line span.d {
+      font-weight: 400;
+      color: var(--muted);
+      margin-left: 8px;
+      font-size: 11px;
+    }
+
+    .week {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .day {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 0 9px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text);
+      font-family: inherit;
+    }
+
+    .day em {
+      display: block;
+      font-style: normal;
+      font-size: 9px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .day.active {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .day.active em {
+      color: #cfe0ff;
+    }
+
+    .ring-wrap {
+      position: relative;
+      width: 190px;
+      height: 190px;
+      margin: 34px auto 18px;
+    }
+
+    .ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      --sweep: 190deg;
+      background: conic-gradient(
+        from 200deg,
+        #cfe0ff 0deg,
+        var(--brand) var(--sweep),
+        transparent var(--sweep)
+      );
+      -webkit-mask: radial-gradient(circle, transparent 64%, #000 65%);
+      mask: radial-gradient(circle, transparent 64%, #000 65%);
+    }
+
+    .ring-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ring-center b {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -.5px;
+    }
+
+    .ring-center span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .tick {
+      position: absolute;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .tick.t12 {
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .tick.t3 {
+      right: -18px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .tick.t6 {
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .tick.t9 {
+      left: -18px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .ring-caption {
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Schedule */
+    .slot {
+      display: flex;
+      align-items: stretch;
+      gap: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 11px 14px;
+      margin-bottom: 8px;
+    }
+
+    .slot:last-child {
+      margin-bottom: 0;
+    }
+
+    .slot .t {
+      width: 46px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .slot .t small {
+      display: block;
+      font-weight: 400;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .slot .bar {
+      width: 3px;
+      border-radius: 3px;
+      background: var(--brand);
+    }
+
+    .slot b {
+      font-size: 12px;
+      font-weight: 600;
+      display: block;
+    }
+
+    .slot small.s {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* Lists */
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+    }
+
+    .item:last-child {
+      margin-bottom: 0;
+    }
+
+    .item .mini {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--tint);
+      color: var(--brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .item b {
+      font-size: 12px;
+      font-weight: 600;
+      display: block;
+    }
+
+    .item small {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .item .when {
+      margin-left: auto;
+      font-size: 10px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* Attendance */
+    .att {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .donut {
+      --p: 80;
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: conic-gradient(
+        var(--brand) calc(var(--p) * 1%),
+        var(--tint) 0
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .donut::before {
+      content: "";
+      position: absolute;
+      inset: 11px;
+      border-radius: 50%;
+      background: var(--surface);
+    }
+
+    .donut span {
+      position: relative;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .att p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .att b {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    @media (max-width: 1100px) {
+      .content {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 860px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+      }
+
+      .logout {
+        margin-top: 16px;
+      }
+
+      .courses {
+        grid-template-columns: 1fr;
+      }
+
+      .who {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Icon set (line icons) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-grid" viewBox="0 0 24 24">
+    <rect x="3" y="3" width="7" height="7"/>
+    <rect x="14" y="3" width="7" height="7"/>
+    <rect x="14" y="14" width="7" height="7"/>
+    <rect x="3" y="14" width="7" height="7"/>
+  </symbol>
+
+  <symbol id="i-book" viewBox="0 0 24 24">
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+  </symbol>
+
+  <symbol id="i-users" viewBox="0 0 24 24">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+    <circle cx="9" cy="7" r="4"/>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </symbol>
+
+  <symbol id="i-file" viewBox="0 0 24 24">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="16" y1="13" x2="8" y2="13"/>
+    <line x1="16" y1="17" x2="8" y2="17"/>
+  </symbol>
+
+  <symbol id="i-award" viewBox="0 0 24 24">
+    <circle cx="12" cy="8" r="7"/>
+    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+  </symbol>
+
+  <symbol id="i-check" viewBox="0 0 24 24">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </symbol>
+
+  <symbol id="i-calendar" viewBox="0 0 24 24">
+    <rect x="3" y="4" width="18" height="18" rx="2"/>
+    <line x1="16" y1="2" x2="16" y2="6"/>
+    <line x1="8" y1="2" x2="8" y2="6"/>
+    <line x1="3" y1="10" x2="21" y2="10"/>
+  </symbol>
+
+  <symbol id="i-folder" viewBox="0 0 24 24">
+    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+  </symbol>
+
+  <symbol id="i-megaphone" viewBox="0 0 24 24">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+  </symbol>
+
+  <symbol id="i-chat" viewBox="0 0 24 24">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </symbol>
+
+  <symbol id="i-sliders" viewBox="0 0 24 24">
+    <line x1="4" y1="21" x2="4" y2="14"/>
+    <line x1="4" y1="10" x2="4" y2="3"/>
+    <line x1="12" y1="21" x2="12" y2="12"/>
+    <line x1="12" y1="8" x2="12" y2="3"/>
+    <line x1="20" y1="21" x2="20" y2="16"/>
+    <line x1="20" y1="12" x2="20" y2="3"/>
+    <line x1="1" y1="14" x2="7" y2="14"/>
+    <line x1="9" y1="8" x2="15" y2="8"/>
+    <line x1="17" y1="16" x2="23" y2="16"/>
+  </symbol>
+
+  <symbol id="i-logout" viewBox="0 0 24 24">
+    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+    <polyline points="16 17 21 12 16 7"/>
+    <line x1="21" y1="12" x2="9" y2="12"/>
+  </symbol>
+
+  <symbol id="i-mail" viewBox="0 0 24 24">
+    <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
+    <polyline points="22,6 12,13 2,6"/>
+  </symbol>
+
+  <symbol id="i-bell" viewBox="0 0 24 24">
+    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+  </symbol>
+
+  <symbol id="i-plus" viewBox="0 0 24 24">
+    <line x1="12" y1="5" x2="12" y2="19"/>
+    <line x1="5" y1="12" x2="19" y2="12"/>
+  </symbol>
+
+  <symbol id="i-upload" viewBox="0 0 24 24">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+    <polyline points="17 8 12 3 7 8"/>
+    <line x1="12" y1="3" x2="12" y2="15"/>
+  </symbol>
+
+  <symbol id="i-search" viewBox="0 0 24 24">
+    <circle cx="11" cy="11" r="8"/>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  </symbol>
+</svg>
+
+<div class="shell">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+
+    <div class="brand">
+      <span class="mark">S</span> Smart LMS
+    </div>
+
+    <div class="nav-label">Menu</div>
+
+    <nav class="nav">
+
+      <!-- CORRECTED: lecturers:dashboard -->
+      <a href="{% url 'lecturers:dashboard' %}" class="active">
+        <svg class="i"><use href="#i-grid"/></svg>
+        Dashboard
+      </a>
+
+      <!-- CORRECTED: lecturers:my_courses -->
+      <a href="{% url 'lecturers:my_courses' %}">
+        <svg class="i"><use href="#i-book"/></svg>
+        My Courses
+      </a>
+
+      <a href="#">
+        <svg class="i"><use href="#i-users"/></svg>
+        Students
+      </a>
+
+      <a href="#">
+        <svg class="i"><use href="#i-file"/></svg>
+        Assignments
+        {% if pending_count %}
+          <span class="count">{{ pending_count }}</span>
+        {% endif %}
+      </a>
+
+      <a href="#">
+        <svg class="i"><use href="#i-award"/></svg>
+        Gradebook
+      </a>
+
+      <a href="#">
+        <svg class="i"><use href="#i-check"/></svg>
+        Attendance
+      </a>
+
+      <a href="#">
+        <svg class="i"><use href="#i-calendar"/></svg>
+        Schedule
+      </a>
+
+      <a href="#">
+        <svg class="i"><use href="#i-folder"/></svg>
+        Materials
+      </a>
+
+      <a href="#">
+        <svg class="i"><use href="#i-megaphone"/></svg>
+        Announcements
+      </a>
+
+      <a href="#">
+        <svg class="i"><use href="#i-chat"/></svg>
+        Messages
+        {% if unread_messages %}
+          <span class="count">{{ unread_messages }}</span>
+        {% endif %}
+      </a>
+
+      <a href="#">
+        <svg class="i"><use href="#i-sliders"/></svg>
+        Settings
+      </a>
+
+    </nav>
+
+    <div class="logout">
+      <a href="#">
+        <svg class="i"><use href="#i-logout"/></svg>
+        Log Out
+      </a>
+    </div>
+
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main">
+
+    <div class="topbar">
+
+      <div class="search-wrap">
+        <svg class="i"><use href="#i-search"/></svg>
+        <input
+          class="search"
+          type="search"
+          placeholder="Search courses, students, assignments"
+        >
+      </div>
+
+      <div class="top-right">
+
+        <button class="icon-btn" type="button" aria-label="Messages">
+          <svg class="i sm"><use href="#i-mail"/></svg>
+        </button>
+
+        <button class="icon-btn" type="button" aria-label="Notifications">
+          <svg class="i sm"><use href="#i-bell"/></svg>
+          <span class="dot"></span>
+        </button>
+
+        <div class="user">
+
+          <div class="avatar">
+            {{ request.user.first_name|default:request.user.username|slice:":1"|upper }}
+          </div>
+
+          <div class="who">
+            <b>
+              {{ request.user.get_full_name|default:request.user.username }}
+            </b>
+
+            <small>
+              {{ profile.title|default:"Lecturer" }}
+            </small>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="greet">
+
+      <small>Hello,</small>
+
+      <h2>
+        {{ profile.title }}
+        {{ request.user.get_full_name|default:request.user.username }}
+      </h2>
+
+      <p>
+        {{ profile.department }}
+
+        {% if profile.staff_id %}
+          &middot; Staff ID {{ profile.staff_id }}
+        {% endif %}
+
+        {% if profile.specialization %}
+          &middot; {{ profile.specialization }}
+        {% endif %}
+      </p>
+
+    </div>
+
+    <div class="quick">
+
+      <!-- CORRECTED -->
+      <a href="{% url 'lecturers:my_courses' %}" class="qbtn primary">
+        <svg class="i sm"><use href="#i-plus"/></svg>
+        Create course
+      </a>
+
+      <a href="#" class="qbtn">
+        <svg class="i sm"><use href="#i-upload"/></svg>
+        Upload material
+      </a>
+
+      <!-- CORRECTED -->
+      <a href="{% url 'lecturers:create_assignment' %}" class="qbtn">
+        <svg class="i sm"><use href="#i-file"/></svg>
+        New assignment
+      </a>
+
+      <a href="#" class="qbtn">
+        <svg class="i sm"><use href="#i-check"/></svg>
+        Take attendance
+      </a>
+
+      <!-- CORRECTED -->
+      <a href="{% url 'lecturers:post_announcement' %}" class="qbtn">
+        <svg class="i sm"><use href="#i-megaphone"/></svg>
+        Post announcement
+      </a>
+
+    </div>
+
+    <div class="stats">
+
+      <div class="stat">
+        <div class="ico">
+          <svg class="i"><use href="#i-book"/></svg>
+        </div>
+        <div>
+          <b>{{ total_courses|default:0 }}</b>
+          <span>Courses</span>
+        </div>
+      </div>
+
+      <div class="stat">
+        <div class="ico">
+          <svg class="i"><use href="#i-users"/></svg>
+        </div>
+        <div>
+          <b>{{ total_students|default:0 }}</b>
+          <span>Students</span>
+        </div>
+      </div>
+
+      <div class="stat">
+        <div class="ico">
+          <svg class="i"><use href="#i-file"/></svg>
+        </div>
+        <div>
+          <b>{{ pending_count|default:0 }}</b>
+          <span>Submissions to grade</span>
+        </div>
+      </div>
+
+      <div class="stat">
+        <div class="ico">
+          <svg class="i"><use href="#i-chat"/></svg>
+        </div>
+        <div>
+          <b>{{ unread_messages|default:0 }}</b>
+          <span>Unread messages</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="content">
+
+      <!-- ===== LEFT COLUMN ===== -->
+      <div class="col">
+
+        <div class="card">
+
+          <div class="card-head">
+            <h3>My courses</h3>
+
+            <!-- CORRECTED -->
+            <a href="{% url 'lecturers:my_courses' %}">
+              See all
+            </a>
+          </div>
+
+          <div class="courses">
+
+            {% for c in courses %}
+
+              <div class="course">
+
+                <span class="code">
+                  {{ c.code }}
+                </span>
+
+                <b>
+                  {{ c.title }}
+                </b>
+
+                <div class="meta">
+                  <span>{{ c.students }} students</span>
+                  <span>{{ c.progress }}% covered</span>
+                </div>
+
+                <div class="progress">
+                  <i style="width: {{ c.progress }}%"></i>
+                </div>
+
+                <div class="next">
+                  Next class: {{ c.next_class }}
+                </div>
+
+              </div>
+
+            {% empty %}
+
+              <div class="empty" style="grid-column: 1 / -1;">
+                You have no courses yet. Use "Create course" to add one.
+              </div>
+
+            {% endfor %}
+
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <div class="card-head">
+            <h3>Submissions waiting to be graded</h3>
+            <a href="#">Open gradebook</a>
+          </div>
+
+          {% if submissions %}
+
+            <table class="tbl">
+
+              <thead>
+                <tr>
+                  <th>Assignment</th>
+                  <th>Submitted</th>
+                  <th>Due</th>
+                  <th></th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                {% for s in submissions %}
+
+                  <tr>
+
+                    <td>
+                      {{ s.title }}
+                      <small>{{ s.course }}</small>
+                    </td>
+
+                    <td>
+                      <span class="chip">
+                        {{ s.submitted }} / {{ s.total }}
+                      </span>
+                    </td>
+
+                    <td>
+                      {{ s.due }}
+                    </td>
+
+                    <td>
+                      <a href="#" class="grade-btn">
+                        Grade
+                      </a>
+                    </td>
+
+                  </tr>
+
+                {% endfor %}
+
+              </tbody>
+
+            </table>
+
+          {% else %}
+
+            <div class="empty">
+              Nothing to grade right now.
+            </div>
+
+          {% endif %}
+
+        </div>
+
+        <div class="card">
+
+          <div class="card-head">
+            <h3>Average score per course</h3>
+            <a href="#">Details</a>
+          </div>
+
+          {% if performance %}
+
+            <div class="perf">
+
+              {% for p in performance %}
+
+                <div class="pcol">
+
+                  <div class="pv">
+                    {{ p.value }}
+                  </div>
+
+                  <div class="pbar">
+                    <i style="height: {{ p.value }}%"></i>
+                  </div>
+
+                  <div class="pl">
+                    {{ p.label }}
+                  </div>
+
+                </div>
+
+              {% endfor %}
+
+            </div>
+
+          {% else %}
+
+            <div class="empty">
+              Scores will appear here once students are graded.
+            </div>
+
+          {% endif %}
+
+        </div>
+
+      </div>
+
+      <!-- ===== RIGHT COLUMN ===== -->
+      <div class="col">
+
+        <div class="card">
+
+          <div class="card-head">
+            <h3>This week</h3>
+            <a href="#">Schedule</a>
+          </div>
+
+          <div class="date-line">
+            <span id="dayName"></span>
+            <span class="d" id="fullDate"></span>
+          </div>
+
+          <div class="week" id="week"></div>
+
+          <div class="ring-wrap">
+
+            <div
+              class="ring"
+              style="--sweep: {{ ring_degrees|default:190 }}deg"
+            ></div>
+
+            <div class="ring-center">
+
+              <b>
+                {{ teaching_hours|default:"00hr" }}
+              </b>
+
+              <span>
+                {{ teaching_minutes|default:"00min" }}
+              </span>
+
+            </div>
+
+            <span class="tick t12">12</span>
+            <span class="tick t3">3</span>
+            <span class="tick t6">6</span>
+            <span class="tick t9">9</span>
+
+          </div>
+
+          <div class="ring-caption">
+            Teaching hours scheduled today
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <div class="card-head">
+            <h3>Today's schedule</h3>
+            <a href="#">See all</a>
+          </div>
+
+          {% for e in schedule %}
+
+            <div class="slot">
+
+              <div class="t">
+                {{ e.start }}
+                <small>{{ e.end }}</small>
+              </div>
+
+              <span class="bar"></span>
+
+              <div>
+                <b>{{ e.title }}</b>
+                <small class="s">
+                  {{ e.course }} &middot; {{ e.room }}
+                </small>
+              </div>
+
+            </div>
+
+          {% empty %}
+
+            <div class="empty">
+              No classes scheduled today.
+            </div>
+
+          {% endfor %}
+
+        </div>
+
+        <div class="card">
+
+          <div class="card-head">
+            <h3>Attendance</h3>
+            <a href="#">Take attendance</a>
+          </div>
+
+          <div class="att">
+
+            <div
+              class="donut"
+              style="--p: {{ attendance_rate|default:0 }}"
+            >
+              <span>
+                {{ attendance_rate|default:0 }}%
+              </span>
+            </div>
+
+            <p>
+              Average attendance across your courses this month.
+              <b>
+                Keep an eye on courses below 70%.
+              </b>
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <div class="card-head">
+            <h3>Announcements</h3>
+
+            <!-- CORRECTED -->
+            <a href="{% url 'lecturers:post_announcement' %}">
+              Post new
+            </a>
+          </div>
+
+          {% for a in announcements %}
+
+            <div class="item">
+
+              <div class="mini">
+                <svg class="i sm">
+                  <use href="#i-megaphone"/>
+                </svg>
+              </div>
+
+              <div>
+                <b>{{ a.title }}</b>
+                <small>{{ a.course }}</small>
+              </div>
+
+              <span class="when">
+                {{ a.when }}
+              </span>
+
+            </div>
+
+          {% empty %}
+
+            <div class="empty">
+              No announcements posted yet.
+            </div>
+
+          {% endfor %}
+
+        </div>
+
+        <div class="card">
+
+          <div class="card-head">
+            <h3>Recent messages</h3>
+            <a href="#">Inbox</a>
+          </div>
+
+          {% for m in recent_messages %}
+
+            <div class="item">
+
+              <div class="mini">
+                {{ m.sender|slice:":1"|upper }}
+              </div>
+
+              <div>
+                <b>{{ m.sender }}</b>
+                <small>{{ m.preview }}</small>
+              </div>
+
+              <span class="when">
+                {{ m.when }}
+              </span>
+
+            </div>
+
+          {% empty %}
+
+            <div class="empty">
+              Your inbox is empty.
+            </div>
+
+          {% endfor %}
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+  (function () {
+    var now = new Date();
+
+    var names = [
+      'Sun',
+      'Mon',
+      'Tue',
+      'Wed',
+      'Thu',
+      'Fri',
+      'Sat'
+    ];
+
+    var full = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday'
+    ];
+
+    var months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+
+    document.getElementById('dayName').textContent =
+      full[now.getDay()];
+
+    document.getElementById('fullDate').textContent =
+      now.getDate() +
+      ' ' +
+      months[now.getMonth()] +
+      ' ' +
+      now.getFullYear();
+
+    var week = document.getElementById('week');
+
+    for (var i = -3; i <= 3; i++) {
+
+      var d = new Date(now);
+
+      d.setDate(now.getDate() + i);
+
+      var b = document.createElement('button');
+
+      b.type = 'button';
+
+      b.className =
+        'day' + (i === 0 ? ' active' : '');
+
+      b.innerHTML =
+        '<em>' +
+        names[d.getDay()] +
+        '</em>' +
+        d.getDate();
+
+      b.addEventListener('click', function () {
+
+        document
+          .querySelectorAll('.day')
+          .forEach(function (x) {
+            x.classList.remove('active');
+          });
+
+        this.classList.add('active');
+
+      });
+
+      week.appendChild(b);
+    }
+
+  })();
+</script>
+
+</body>
+</html>
