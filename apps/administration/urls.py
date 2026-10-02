@@ -21,6 +21,7 @@ app_name = "administration"  # Namespace: "administration:dashboard", etc.
 
 urlpatterns = [
     path("dashboard/", views.dashboard, name="dashboard"),
+    path("dashboard.html", views.dashboard, name="dashboard_html"),
     path("students/", views.manage_students, name="manage_students"),
     path("lecturers/", views.manage_lecturers, name="manage_lecturers"),
     path("departments/", views.manage_departments, name="manage_departments"),
