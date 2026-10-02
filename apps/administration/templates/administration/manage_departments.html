@@ -3,6 +3,13 @@
 {% block content %}
 <h1>Manage Departments</h1>
 
+<h2>Add New Department</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Department</button>
+</form>
+
 <table>
     <thead>
         <tr>
@@ -10,6 +17,7 @@
             <th>Name</th>
             <th>Head</th>
             <th>Description</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -19,9 +27,14 @@
             <td>{{ department.name }}</td>
             <td>{{ department.head|default:"—" }}</td>
             <td>{{ department.description|default:"—" }}</td>
+            <td>
+                <a href="{% url 'administration:edit_department' department.id %}">Edit</a>
+                |
+                <a href="{% url 'administration:delete_department' department.id %}">Delete</a>
+            </td>
         </tr>
         {% empty %}
-        <tr><td colspan="4">No departments found.</td></tr>
+        <tr><td colspan="5">No departments found.</td></tr>
         {% endfor %}
     </tbody>
 </table>
