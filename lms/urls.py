@@ -28,13 +28,18 @@ from django.contrib import admin                    # Django's admin site
 from django.urls import path, include               # path() maps URLs to views, include() delegates to other urls.py
 from django.conf import settings                    # Access to settings.py variables
 from django.conf.urls.static import static          # Helper to serve uploaded files in development
+from django.shortcuts import redirect               # Helper to redirect root URL to login
 
 # The main URL routing table. Django checks these patterns in ORDER from top to bottom.
 urlpatterns = [
+    # Redirect site root to the login page
+    #paaccounts:login
     # Django's built-in admin panel — auto-generates CRUD pages for all registered models
     # Access it at: http://localhost:8000/admin/
     # Create an admin user first: python manage.py createsuperuser
+    path("", lambda request: redirect("accounts:login")),
     path("admin/", admin.site.urls),
+    #path('api/auth/', include('apps.accounts.urls')),
 
     # include() says: "For any URL starting with 'accounts/', let apps/accounts/urls.py handle the rest"
     # Example: /accounts/login/ → accounts/urls.py looks for "login/" → calls login_view

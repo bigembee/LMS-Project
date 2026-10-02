@@ -1,0 +1,725 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Create an account</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Parisienne&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background-image:
+          linear-gradient(
+            160deg,
+            rgba(11, 80, 227, 0.25) 0%,
+            rgba(220, 223, 228, 0.1) 100%
+          ),
+          url("{% static 'accounts/registration_image.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        filter: blur(5px);
+        transform: scale(1.1);
+      }
+
+      .shell {
+        width: 100%;
+        max-width: 1000px;
+        min-height: 640px;
+        background: linear-gradient(135deg, #dcdfe4 100%, #dcdfe4 100%);
+        border-radius: 28px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+        display: flex;
+        overflow: hidden;
+      }
+      /* LEFT PANEL */
+      .left {
+        flex: 1;
+        padding: 48px 56px;
+        display: flex;
+        flex-direction: column;
+      }
+      .logo {
+        align-self: flex-start;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 999px;
+        padding: 8px 20px;
+        font-weight: 400;
+        font-size: 32px;
+        font-family: "Parisienne", cursive;
+        color: #0b50e3;
+        margin-bottom: 60px;
+      }
+      .heading {
+        text-align: center;
+        margin-bottom: 36px;
+      }
+      .heading h1 {
+        font-size: 26px;
+        font-weight: 600;
+        color: #0b50e3;
+        margin-bottom: 6px;
+      }
+      .heading p {
+        font-size: 13px;
+        color: #2b2210;
+      }
+      .field {
+        margin-bottom: 18px;
+      }
+      label {
+        display: block;
+        font-size: 12px;
+        color: #dcdfe4;
+        margin-bottom: 6px;
+        margin-left: 4px;
+      }
+      .input-wrap {
+        position: relative;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 14px 18px;
+        font-size: 14px;
+        font-family: inherit;
+        border: none;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.55);
+        color: #1f2430;
+        outline: none;
+        transition:
+          box-shadow 0.15s,
+          background 0.15s;
+      }
+      input:focus,
+      select:focus {
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(240, 190, 90, 0.35);
+      }
+      .name-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .name-row .field {
+        min-width: 0;
+      }
+      .role-picker {
+        position: relative;
+      }
+      .role-button {
+        width: 100%;
+        padding: 14px 18px;
+        border: none;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.55);
+        color: #1f2430;
+        font: inherit;
+        font-size: 14px;
+        text-align: left;
+        cursor: pointer;
+      }
+      .role-button::after {
+        content: "⌄";
+        float: right;
+        font-size: 18px;
+        line-height: 1;
+      }
+      .role-button:focus,
+      .role-button[aria-expanded="true"] {
+        outline: none;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(240, 190, 90, 0.35);
+      }
+      .role-menu {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: calc(100% + 8px);
+        z-index: 10;
+        display: none;
+        padding: 8px;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+      }
+      .role-menu.show {
+        display: block;
+      }
+      .role-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        padding: 10px 12px;
+        border-radius: 10px;
+        color: #1f2430;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .role-option:hover {
+        background: #f1f4f9;
+      }
+      .role-option input {
+        width: 16px;
+        height: 16px;
+        padding: 0;
+        accent-color: #0b50e3;
+      }
+
+      .toggle-pw {
+        position: absolute;
+        right: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 15px;
+        cursor: pointer;
+        user-select: none;
+        opacity: 0.6;
+      }
+      button.submit {
+        width: 100%;
+        padding: 15px;
+        margin-top: 6px;
+        background: linear-gradient(135deg, #0b50e3, #dcdfe4);
+        border: none;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 14px;
+        color: #2b2210;
+        cursor: pointer;
+        transition: filter 0.15s;
+      }
+      button.submit:hover {
+        filter: brightness(1.05);
+      }
+      button.submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .oauth-row {
+        display: flex;
+        gap: 12px;
+        margin-top: 14px;
+      }
+      .oauth-btn {
+        flex: 1;
+        padding: 13px;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        background: rgba(255, 255, 255, 0.4);
+        font-size: 13px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+      }
+      .error {
+        display: none;
+        background: rgba(220, 38, 38, 0.1);
+        border: 1px solid rgba(220, 38, 38, 0.25);
+        color: #b91c1c;
+        font-size: 12px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        margin-bottom: 14px;
+        text-align: center;
+      }
+      .error a {
+        color: #b91c1c;
+        font-weight: 600;
+        text-decoration: underline;
+      }
+      .error.visible {
+        display: block;
+      }
+      .footer {
+        margin-top: auto;
+        padding-top: 40px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #7a7f8c;
+      }
+      .footer a {
+        color: #1f2430;
+        text-decoration: underline;
+      }
+
+      /* RIGHT PANEL */
+      .right {
+        flex: 1;
+        position: relative;
+        margin: 14px;
+        border-radius: 22px;
+        overflow: hidden;
+        background-image:
+          linear-gradient(
+            160deg,
+            rgba(11, 80, 227, 0.25) 0%,
+            rgba(220, 223, 228, 0.1) 100%
+          ),
+          url("{% static 'accounts/register_student.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: flex-end;
+      }
+      .close-btn {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: #333;
+        cursor: default;
+      }
+
+      /* TERMS REMINDER POPUP */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        z-index: 2000;
+      }
+      .modal-overlay.show {
+        display: flex;
+      }
+      .modal {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 28px 28px 22px;
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+      }
+      .modal-icon {
+        width: 44px;
+        height: 44px;
+        margin: 0 auto 14px;
+        border-radius: 50%;
+        background: rgba(11, 80, 227, 0.12);
+        color: #0b50e3;
+        font-size: 22px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal h2 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #111;
+        margin-bottom: 8px;
+      }
+      .modal p {
+        font-size: 13px;
+        line-height: 1.6;
+        color: #4a4a4a;
+        margin-bottom: 20px;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      }
+      .modal-btn {
+        border: none;
+        border-radius: 999px;
+        padding: 10px 22px;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: filter 0.15s;
+      }
+      .modal-btn:hover {
+        filter: brightness(1.05);
+      }
+      .modal-btn.secondary {
+        background: #eef0f3;
+        color: #333;
+      }
+      .modal-btn.primary {
+        background: linear-gradient(135deg, #0b50e3, #4f83f0);
+        color: #fff;
+      }
+
+      @media (max-width: 860px) {
+        .shell {
+          flex-direction: column;
+        }
+        .right {
+          display: none;
+        }
+        .left {
+          padding: 36px 28px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="left">
+        <div class="logo">Edvance</div>
+
+        <div class="heading">
+          <h1>Create an account</h1>
+          <p>Register to begin</p>
+        </div>
+
+        <div class="error" id="error-msg"></div>
+
+        <form id="register-form">
+          {% csrf_token %}
+          <div class="name-row">
+            <div class="field">
+              <label for="first_name">First name</label>
+              <input
+                type="text"
+                id="first_name"
+                placeholder="First name"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="last_name">Last name</label>
+              <input
+                type="text"
+                id="last_name"
+                placeholder="Last name"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              placeholder="Choose a username"
+              autocomplete="username"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="user@gmail.com"
+              required
+            />
+          </div>
+
+          <div class="field role-picker">
+            <label for="role-button">I am a</label>
+            <input type="hidden" id="role" value="student" />
+            <button
+              type="button"
+              class="role-button"
+              id="role-button"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Student
+            </button>
+            <div
+              class="role-menu"
+              id="role-menu"
+              role="group"
+              aria-label="Select a role"
+            >
+              <label class="role-option">
+                <input
+                  type="checkbox"
+                  name="role-option"
+                  value="student"
+                  checked
+                />
+                <span>Student</span>
+              </label>
+              <label class="role-option">
+                <input type="checkbox" name="role-option" value="lecturer" />
+                <span>Lecturer</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="input-wrap">
+              <input
+                type="password"
+                id="password"
+                placeholder="••••••••••••"
+                required
+              />
+              <span class="toggle-pw" onclick="togglePw('password')">👁</span>
+            </div>
+          </div>
+
+          <button type="submit" class="submit" id="submit-btn">Next</button>
+        </form>
+
+        <div class="oauth-row"></div>
+
+        <div class="footer">
+          <span
+            >Have an account?
+            <a href="{% url 'accounts:login' %}">Sign in</a></span
+          >
+          <a href="{% url 'accounts:terms' %}" id="terms-link"
+            >Terms &amp; Conditions</a
+          >
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="close-btn">✕</div>
+      </div>
+    </div>
+
+    <!-- Popup shown when Submit is clicked before accepting the terms -->
+    <div
+      class="modal-overlay"
+      id="terms-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="terms-modal-title"
+    >
+      <div class="modal">
+        <div class="modal-icon">!</div>
+        <h2 id="terms-modal-title">Accept Terms to Continue</h2>
+        <p>
+          Please read and accept our Terms &amp; Conditions before completing
+          your registration. The details you've entered will be kept, so you
+          won't need to type them again.
+        </p>
+        <div class="modal-actions">
+          <button
+            type="button"
+            class="modal-btn secondary"
+            id="terms-modal-cancel"
+          >
+            Not now
+          </button>
+          <button type="button" class="modal-btn primary" id="terms-modal-go">
+            Read &amp; Accept Terms
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const PASSWORD_CONFIRMATION_URL =
+        "{% url 'accounts:password_confirmation' %}";
+      const TERMS_URL = "{% url 'accounts:terms' %}";
+      const DASHBOARD_URL = "{% url 'accounts:dashboard_redirect' %}";
+
+      const form = document.getElementById("register-form");
+      const errorEl = document.getElementById("error-msg");
+      const submitBtn = document.getElementById("submit-btn");
+      const termsModal = document.getElementById("terms-modal");
+      const termsLink = document.getElementById("terms-link");
+      const roleButton = document.getElementById("role-button");
+      const roleMenu = document.getElementById("role-menu");
+      const roleInput = document.getElementById("role");
+      const roleOptions = [
+        ...document.querySelectorAll("input[name=role-option]"),
+      ];
+
+      const DRAFT_KEY = "register_form_draft";
+      const TERMS_FLAG = "terms_accepted";
+
+      const FIELD_IDS = [
+        "first_name",
+        "last_name",
+        "username",
+        "email",
+        "role",
+        "password",
+      ];
+
+      function togglePw(id) {
+        const el = document.getElementById(id);
+        el.type = el.type === "password" ? "text" : "password";
+      }
+
+      function setRole(role) {
+        roleInput.value = role;
+        roleButton.textContent = role === "lecturer" ? "Lecturer" : "Student";
+        roleOptions.forEach((option) => {
+          option.checked = option.value === role;
+        });
+      }
+
+      roleButton.addEventListener("click", () => {
+        const isOpen = roleMenu.classList.toggle("show");
+        roleButton.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      roleOptions.forEach((option) => {
+        option.addEventListener("change", () => {
+          if (option.checked) {
+            setRole(option.value);
+            roleMenu.classList.remove("show");
+            roleButton.setAttribute("aria-expanded", "false");
+          } else {
+            option.checked = true;
+          }
+        });
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest(".role-picker")) {
+          roleMenu.classList.remove("show");
+          roleButton.setAttribute("aria-expanded", "false");
+        }
+      });
+
+      function showError(html) {
+        errorEl.innerHTML = html;
+        errorEl.classList.add("visible");
+      }
+
+      function hideError() {
+        errorEl.innerHTML = "";
+        errorEl.classList.remove("visible");
+      }
+
+      // The Terms page sets this flag when the user clicks Accept. It is read
+      // once on load and then removed, so a fresh visit to this page always
+      // has to go through the Terms page again (no stale acceptance).
+      let termsAccepted = sessionStorage.getItem(TERMS_FLAG) === "true";
+      sessionStorage.removeItem(TERMS_FLAG);
+
+      function getCsrfToken() {
+        const input = document.querySelector("[name=csrfmiddlewaretoken]");
+        return input ? input.value : "";
+      }
+
+      // ---------------------------------------------------------------
+      // Keep the form filled in while the user visits the Terms page.
+      // sessionStorage lives only in this tab and is wiped when it closes.
+      // ---------------------------------------------------------------
+      function saveDraft() {
+        const draft = {};
+        FIELD_IDS.forEach((id) => {
+          draft[id] = document.getElementById(id).value;
+        });
+        sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+      }
+
+      function restoreDraft() {
+        const raw = sessionStorage.getItem(DRAFT_KEY);
+        if (!raw) return;
+        try {
+          const draft = JSON.parse(raw);
+          FIELD_IDS.forEach((id) => {
+            if (draft[id] !== undefined) {
+              document.getElementById(id).value = draft[id];
+            }
+          });
+        } catch (err) {
+          // A corrupted draft should never break the page.
+        }
+        setRole(document.getElementById("role").value || "student");
+        // Remove it straight away so the password doesn't linger in storage.
+        sessionStorage.removeItem(DRAFT_KEY);
+      }
+
+      function goToTerms() {
+        saveDraft();
+        window.location.href = TERMS_URL;
+      }
+
+      // ---------------------------------------------------------------
+      // Terms reminder popup
+      // ---------------------------------------------------------------
+      function openTermsModal() {
+        termsModal.classList.add("show");
+        document.getElementById("terms-modal-go").focus();
+      }
+
+      function closeTermsModal() {
+        termsModal.classList.remove("show");
+      }
+
+      document
+        .getElementById("terms-modal-go")
+        .addEventListener("click", goToTerms);
+      document
+        .getElementById("terms-modal-cancel")
+        .addEventListener("click", closeTermsModal);
+      termsModal.addEventListener("click", (e) => {
+        if (e.target === termsModal) closeTermsModal();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeTermsModal();
+      });
+
+      // Clicking the footer "Terms & Conditions" link also keeps the draft.
+      termsLink.addEventListener("click", saveDraft);
+
+      // Fill the form back in when returning from the Terms page.
+      restoreDraft();
+
+      // ---------------------------------------------------------------
+      // Submit
+      // ---------------------------------------------------------------
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        hideError();
+
+        // Terms must be accepted before moving to password confirmation.
+        if (!termsAccepted) {
+          openTermsModal();
+          return;
+        }
+
+        saveDraft();
+        window.location.href = PASSWORD_CONFIRMATION_URL;
+      });
+    </script>
+  </body>
+</html>

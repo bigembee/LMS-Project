@@ -24,10 +24,17 @@ FUNCTIONS USED:
 """
 
 from django.shortcuts import render, redirect                   # render templates, redirect to URLs
-from django.contrib.auth import login, logout                   # Django's login/logout functions
+from django.contrib.auth import authenticate, login, logout       # Django authentication helpers
 from django.contrib.auth.decorators import login_required       # Decorator: must be logged in to access
 from django.contrib import messages                             # Flash messages ("Success!", "Error!")
 
+from rest_framework import generics, permissions
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from .serializers import RegisterSerializer
+from .forms import RegistrationForm
+from .models import User
 
 def register_view(request):
     """
@@ -52,10 +59,44 @@ def register_view(request):
             form = RegistrationForm()
         return render(request, "accounts/register.html", {"form": form})
     """
-    return render(request, "accounts/register.html")
+    if request.method == "POST":
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Registration successful!")
+            return redirect("accounts:dashboard_redirect")
+    else:
+        form = RegistrationForm()
+    return render(request, "accounts/register.html", {"form": form})
 
 
-def login_view(request):
+
+class RegisterView(generics.CreateAPIView):
+    serializer_class = RegisterSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        # Create a Django session as well as issuing JWTs so the dashboard
+        # redirect and @login_required views recognize the new user.
+        login(request, user)
+
+        # Optional: issue JWT immediately after registration
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            "user": {"id": user.id, "email": user.email, "role": user.role},
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+        }, status=201)
+
+def password_confirmation_view(request):
+    """Render the second registration step where the password is confirmed."""
+    return render(request, "accounts/password_confirmation.html")
+
+def terms_view(request):
     """
     Handle user login.
 
@@ -67,7 +108,31 @@ def login_view(request):
 
     TODO: Implement this — use LoginForm from forms.py or Django's AuthenticationForm
     """
+    return render(request,'accounts/terms.html')
+
+def login_view(request):
+    """Authenticate a user and redirect them to their role dashboard."""
+    if request.method == "POST":
+        identifier = request.POST.get("email", "").strip()
+        password = request.POST.get("password", "")
+
+        # The interface accepts either an email address or a username.
+        user = User.objects.filter(email__iexact=identifier).first()
+        username = user.username if user else identifier
+        authenticated_user = authenticate(request, username=username, password=password)
+
+        if authenticated_user is not None:
+            login(request, authenticated_user)
+            return redirect("accounts:dashboard_redirect")
+
+        return render(
+            request,
+            "accounts/login.html",
+            {"login_error": "Invalid email/username or password."},
+        )
+
     return render(request, "accounts/login.html")
+
 
 
 def logout_view(request):

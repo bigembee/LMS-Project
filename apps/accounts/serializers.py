@@ -32,6 +32,10 @@ just like ModelForm auto-generates form fields.
 
 from rest_framework import serializers  # DRF's serializer classes
 from .models import User               # Our custom User model
+from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
+
+
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -66,22 +70,26 @@ class RegisterSerializer(serializers.ModelSerializer):
     # Explicit field definition overrides the auto-generated one from the model
     # write_only=True: accept this field in POST requests, but never return it in responses
     # min_length=8: password must be at least 8 characters
-    password = serializers.CharField(write_only=True, min_length=8)
+    password = serializers.CharField(write_only=True, min_length=8, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True)
+    terms_accepted = serializers.BooleanField(write_only=True)
 
     class Meta:
         model = User
-        fields = ["username", "email", "first_name", "last_name", "role", "password"]
+        fields = [
+            "username", "email", "first_name", "last_name", "role",
+            "password", "password2", "terms_accepted",
+        ]
+
+    def validate(self, data):
+        if data["password"] != data["password2"]:
+            raise serializers.ValidationError({"password": "Passwords don't match."})
+        if not data["terms_accepted"]:
+            raise serializers.ValidationError({"terms_accepted": "You must accept the Terms & Conditions."})
+        return data
 
     def create(self, validated_data):
-        """
-        Called when serializer.save() is called after successful validation.
-
-        We use create_user() instead of create() because create_user():
-            1. Hashes the password (create() would store it as plain text!)
-            2. Sets is_active=True
-            3. Normalizes the email
-
-        **validated_data unpacks the dictionary:
-            User.objects.create_user(username="john", email="john@example.com", password="secret123", ...)
-        """
-        return User.objects.create_user(**validated_data)
+        validated_data.pop("password2")
+        validated_data.pop("terms_accepted")
+        password = validated_data.pop("password")
+        return User.objects.create_user(password=password, **validated_data)
