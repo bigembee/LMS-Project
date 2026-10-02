@@ -482,6 +482,10 @@
                 <input type="checkbox" name="role-option" value="lecturer" />
                 <span>Lecturer</span>
               </label>
+              <label class="role-option">
+                <input type="checkbox" name="role-option" value="admin" />
+                <span>Admin</span>
+              </label>
             </div>
           </div>
 
@@ -587,7 +591,12 @@
 
       function setRole(role) {
         roleInput.value = role;
-        roleButton.textContent = role === "lecturer" ? "Lecturer" : "Student";
+        const roleLabels = {
+          student: "Student",
+          lecturer: "Lecturer",
+          admin: "Admin",
+        };
+        roleButton.textContent = roleLabels[role] || "Student";
         roleOptions.forEach((option) => {
           option.checked = option.value === role;
         });

@@ -190,7 +190,7 @@ def dashboard_redirect(request):
     we check their role and redirect accordingly:
         - Students  → /students/dashboard/
         - Lecturers → /lecturers/dashboard/
-        - Admins    → /administration/dashboard/
+        - Admins    → /administration/dashboard.html
 
     FLOW:
         User logs in → LOGIN_REDIRECT_URL sends them to /dashboard/ →
@@ -206,7 +206,7 @@ def dashboard_redirect(request):
     elif user.is_lecturer:
         return redirect("lecturers:dashboard")          # → /lecturers/dashboard/
     elif user.is_admin_user:
-        return redirect("administration:dashboard")     # → /administration/dashboard/
+        return redirect("administration:dashboard_html")  # → /administration/dashboard.html
 
     # Fallback — if role is somehow not set, go to the profile page
     return redirect("accounts:profile")
