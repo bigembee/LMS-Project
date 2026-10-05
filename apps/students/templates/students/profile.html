@@ -1,0 +1,247 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Profile · Edvance</title>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <style>
+    :root { --profile-blue: #0b50e3; }
+    body { min-height: 100vh; background: #f4f7fc; color: #17243b; font-family: system-ui, sans-serif; }
+    .profile-page { width: min(920px, calc(100% - 32px)); margin: 36px auto; }
+    .profile-header { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:24px; }
+    .profile-header h1 { margin:0; font-size:28px; }
+    .profile-header p { margin:4px 0 0; color:#687991; }
+    .brand { color:var(--profile-blue); font-weight:700; font-size:20px; }
+    .profile-card { background:#fff; border:1px solid #e1e8f2; border-radius:16px; padding:24px; margin-bottom:18px; box-shadow:0 5px 20px rgba(22,46,88,.05); }
+    .profile-card h2 { margin:0 0 18px; font-size:17px; }
+    .field-hint { margin:-8px 0 16px; color:#687991; font-size:12px; }
+    .identity-grid,.form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+    .identity-item { padding:13px 14px; border:1px solid #e1e8f2; border-radius:10px; min-width:0; }
+    .identity-item small { display:block; color:#687991; margin-bottom:4px; }
+    .identity-item strong { overflow-wrap:anywhere; }
+    .form-grid p { margin:0; }
+    .form-grid label { display:block; margin:0 0 6px; font-weight:600; font-size:13px; }
+    .form-grid input,.form-grid select { width:100%; min-height:42px; padding:9px 11px; border:1px solid #cdd8e8; border-radius:9px; background:#fff; color:#17243b; font:inherit; }
+    .helptext { display:block; color:#687991; font-size:12px; margin-top:4px; }
+    .errorlist { color:#b42318; font-size:12px; list-style:none; padding:0; margin:4px 0; }
+    .profile-actions { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:20px; }
+    .profile-actions a { color:var(--profile-blue); text-decoration:none; }
+    .save-button { border:0; border-radius:9px; background:var(--profile-blue); color:#fff; padding:11px 18px; font:inherit; font-weight:600; cursor:pointer; }
+    .notice { border-radius:9px; padding:12px 14px; background:#e3edff; color:#17366e; margin-bottom:16px; }
+    .catalog-sources { color:#687991; font-size:12px; line-height:1.8; margin:16px 2px; }
+    .catalog-sources a { color:var(--profile-blue); margin-left:4px; }
+    .searchable-dropdown { position:relative; }
+    .searchable-dropdown input { padding-right:42px; }
+    .searchable-dropdown input:focus { outline:2px solid rgba(11,80,227,.25); border-color:var(--profile-blue); }
+    .searchable-options { position:absolute; z-index:20; top:calc(100% + 5px); left:0; right:0; max-height:250px; overflow:auto; padding:5px; border:1px solid #cdd8e8; border-radius:10px; background:#fff; box-shadow:0 12px 28px rgba(22,46,88,.16); }
+    .searchable-options[hidden] { display:none; }
+    .searchable-option { display:block; width:100%; border:0; border-radius:7px; padding:9px 10px; background:#fff; color:#17243b; text-align:left; font:inherit; cursor:pointer; }
+    .searchable-option:hover,.searchable-option:focus { background:#eaf1ff; outline:none; }
+    .searchable-empty { padding:9px 10px; color:#687991; font-size:13px; }
+    .native-select { position:absolute!important; width:1px!important; height:1px!important; padding:0!important; margin:-1px!important; overflow:hidden!important; clip:rect(0,0,0,0)!important; white-space:nowrap!important; border:0!important; }
+    @media(max-width:600px) { .profile-page { margin:22px auto; } .profile-header { align-items:flex-start; flex-direction:column; } .profile-card { padding:18px; } .identity-grid,.form-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <main class="profile-page">
+    <header class="profile-header">
+      <div><div class="brand">Edvance</div><h1>My profile</h1><p>Keep your personal and academic details up to date.</p></div>
+      <a class="btn soft" href="{% url 'students:dashboard' %}">Back to dashboard</a>
+    </header>
+
+    {% for message in messages %}<div class="notice" role="status">{{ message }}</div>{% endfor %}
+
+    <section class="profile-card" aria-labelledby="account-details-title">
+      <h2 id="account-details-title">Account details</h2>
+      <div class="identity-grid">
+        <div class="identity-item"><small>First name</small><strong>{{ request.user.first_name|default:"—" }}</strong></div>
+        <div class="identity-item"><small>Middle name</small><strong>{{ request.user.middle_name|default:"—" }}</strong></div>
+        <div class="identity-item"><small>Last name</small><strong>{{ request.user.last_name|default:"—" }}</strong></div>
+        <div class="identity-item"><small>Role</small><strong>{{ request.user.get_role_display }}</strong></div>
+        <div class="identity-item"><small>Email</small><strong>{{ request.user.email|default:"—" }}</strong></div>
+      </div>
+    </section>
+
+    <form method="post">
+      {% csrf_token %}
+      <section class="profile-card" aria-labelledby="personal-details-title">
+        <h2 id="personal-details-title">Personal details</h2>
+        <p class="field-hint">Click a field or start typing to search. Choose an institution first, then a faculty to load its departments.</p>
+        <div class="form-grid">
+          {% for field in contact_form %}<p>{{ field.label_tag }}{{ field }}{{ field.errors }}</p>{% endfor %}
+          {% for field in academic_form %}
+            <p id="wrap-{{ field.name }}" {% if field.name == 'other_institution' or field.name == 'other_faculty_name' or field.name == 'other_department' %}hidden{% endif %}>
+              {{ field.label_tag }}{{ field }}{{ field.errors }}
+            </p>
+          {% endfor %}
+        </div>
+        <div class="profile-actions"><a href="{% url 'students:dashboard' %}">Cancel</a><button class="save-button" type="submit">Save profile</button></div>
+      </section>
+    </form>
+    <p class="catalog-sources">This is a source-verified starter catalog, not yet a complete list of all NUC-approved universities. See the <a href="https://enuc.nuc.edu.ng/nus" target="_blank" rel="noopener">NUC university directory</a> and verify current academic structures with:
+      {% for university in university_catalog.universities %}<a href="{{ university.source_url }}" target="_blank" rel="noopener">{{ university.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}.
+    </p>
+  </main>
+  {{ university_catalog|json_script:"university-catalog" }}
+  <script>
+    const catalog = JSON.parse(document.getElementById("university-catalog").textContent);
+    const institutionSelect = document.getElementById("id_institution");
+    const facultySelect = document.getElementById("id_faculty_name");
+    const departmentSelect = document.getElementById("id_academic_department");
+    const otherInstitution = document.getElementById("id_other_institution");
+    const otherFaculty = document.getElementById("id_other_faculty_name");
+    const otherDepartment = document.getElementById("id_other_department");
+
+    const searchableSelects = new Map();
+
+    function fillSelect(select, placeholder, values) {
+      select.replaceChildren(new Option(placeholder, ""));
+      values.forEach((value) => select.add(new Option(value, value)));
+      select.add(new Option("Other / not listed (enter name)", "__other__"));
+      searchableSelects.get(select)?.refresh();
+    }
+
+    function makeSearchable(select) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "searchable-dropdown";
+      select.parentNode.insertBefore(wrapper, select);
+      wrapper.appendChild(select);
+      select.classList.add("native-select");
+
+      const input = document.createElement("input");
+      input.type = "search";
+      input.id = `search-${select.id}`;
+      input.autocomplete = "off";
+      input.setAttribute("role", "combobox");
+      input.setAttribute("aria-autocomplete", "list");
+      input.setAttribute("aria-expanded", "false");
+      input.setAttribute("aria-controls", `${select.id}-options`);
+      input.placeholder = select.options[0]?.textContent || "Type to search";
+
+      const options = document.createElement("div");
+      options.className = "searchable-options";
+      options.id = `${select.id}-options`;
+      options.setAttribute("role", "listbox");
+      options.hidden = true;
+      wrapper.append(input, options);
+
+      const label = document.querySelector(`label[for="${select.id}"]`);
+      if (label) label.htmlFor = input.id;
+
+      const close = () => {
+        options.hidden = true;
+        input.setAttribute("aria-expanded", "false");
+      };
+      const refresh = () => {
+        const selected = select.options[select.selectedIndex];
+        input.value = selected && selected.value ? selected.textContent : "";
+        input.placeholder = select.options[0]?.textContent || "Type to search";
+        input.disabled = select.disabled;
+      };
+      const renderOptions = () => {
+        const query = input.value.trim().toLocaleLowerCase();
+        const available = Array.from(select.options).filter((option) =>
+          option.value && !option.disabled && option.textContent.toLocaleLowerCase().includes(query)
+        );
+        options.replaceChildren();
+        if (!available.length) {
+          const empty = document.createElement("div");
+          empty.className = "searchable-empty";
+          empty.textContent = "No matches. Try another search.";
+          options.appendChild(empty);
+        } else {
+          available.forEach((option) => {
+            const choice = document.createElement("button");
+            choice.type = "button";
+            choice.className = "searchable-option";
+            choice.setAttribute("role", "option");
+            choice.textContent = option.textContent;
+            choice.addEventListener("click", () => {
+              select.value = option.value;
+              select.dispatchEvent(new Event("change", { bubbles: true }));
+              refresh();
+              close();
+            });
+            options.appendChild(choice);
+          });
+        }
+      };
+      const open = () => {
+        if (input.disabled) return;
+        input.value = "";
+        renderOptions();
+        options.hidden = false;
+        input.setAttribute("aria-expanded", "true");
+      };
+
+      input.addEventListener("focus", open);
+      input.addEventListener("input", () => {
+        renderOptions();
+        options.hidden = false;
+        input.setAttribute("aria-expanded", "true");
+      });
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          close();
+          refresh();
+        }
+        if (event.key === "Enter") {
+          const first = options.querySelector(".searchable-option");
+          if (first) { event.preventDefault(); first.click(); }
+        }
+        if (event.key === "ArrowDown") options.querySelector(".searchable-option")?.focus();
+      });
+      wrapper.addEventListener("focusout", () => setTimeout(() => {
+        if (!wrapper.contains(document.activeElement)) { close(); refresh(); }
+      }, 0));
+      document.addEventListener("click", (event) => {
+        if (!wrapper.contains(event.target)) close();
+      });
+      select.addEventListener("change", refresh);
+      searchableSelects.set(select, { refresh });
+      refresh();
+    }
+
+    function syncManualFields() {
+      document.getElementById("wrap-other_institution").hidden = institutionSelect.value !== "__other__";
+      document.getElementById("wrap-other_faculty_name").hidden = facultySelect.value !== "__other__";
+      document.getElementById("wrap-other_department").hidden = departmentSelect.value !== "__other__";
+    }
+
+    [institutionSelect, facultySelect, departmentSelect].forEach(makeSearchable);
+    facultySelect.disabled = !institutionSelect.value;
+    departmentSelect.disabled = !facultySelect.value;
+    searchableSelects.get(facultySelect).refresh();
+    searchableSelects.get(departmentSelect).refresh();
+
+    institutionSelect.addEventListener("change", () => {
+      const university = catalog.universities.find((item) => item.name === institutionSelect.value);
+      fillSelect(facultySelect, "Choose a faculty", university ? university.faculties.map((item) => item.name) : []);
+      fillSelect(departmentSelect, "Choose a department", []);
+      otherFaculty.value = "";
+      otherDepartment.value = "";
+      facultySelect.disabled = !institutionSelect.value;
+      departmentSelect.disabled = true;
+      searchableSelects.get(facultySelect).refresh();
+      searchableSelects.get(departmentSelect).refresh();
+      syncManualFields();
+    });
+
+    facultySelect.addEventListener("change", () => {
+      const university = catalog.universities.find((item) => item.name === institutionSelect.value);
+      const faculty = university?.faculties.find((item) => item.name === facultySelect.value);
+      fillSelect(departmentSelect, "Choose a department", faculty ? faculty.departments : []);
+      otherDepartment.value = "";
+      departmentSelect.disabled = !facultySelect.value;
+      searchableSelects.get(departmentSelect).refresh();
+      syncManualFields();
+    });
+
+    facultySelect.addEventListener("change", syncManualFields);
+    departmentSelect.addEventListener("change", syncManualFields);
+    syncManualFields();
+  </script>
+</body>
+</html>
