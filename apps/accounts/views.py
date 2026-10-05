@@ -101,32 +101,6 @@ def terms_view(request):
     """
     Handle user login.
     """
-<<<<<<< HEAD
-    return render(request,'accounts/terms.html')
-
-def login_view(request):
-    """Authenticate a user and redirect them to their role dashboard."""
-    if request.method == "POST":
-        identifier = request.POST.get("email", "").strip()
-        password = request.POST.get("password", "")
-
-        # The interface accepts either an email address or a username.
-        user = User.objects.filter(email__iexact=identifier).first()
-        username = user.username if user else identifier
-        authenticated_user = authenticate(request, username=username, password=password)
-
-        if authenticated_user is not None:
-            login(request, authenticated_user)
-            return redirect("accounts:dashboard_redirect")
-
-        return render(
-            request,
-            "accounts/login.html",
-            {"login_error": "Invalid email/username or password."},
-        )
-
-    return render(request, "accounts/login.html")
-=======
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -137,7 +111,6 @@ def login_view(request):
         form = AuthenticationForm()
 
     return render(request, "accounts/login.html", {"form": form})
->>>>>>> 61fd3a40 (TEMPLATES)
 
 
 
