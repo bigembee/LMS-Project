@@ -21,6 +21,7 @@ app_name = "administration"  # Namespace: "administration:dashboard", etc.
 
 urlpatterns = [
     path("dashboard/", views.dashboard, name="dashboard"),
+    path("dashboard.html", views.dashboard, name="dashboard_html"),
     path("students/", views.manage_students, name="manage_students"),
     path("lecturers/", views.manage_lecturers, name="manage_lecturers"),
     path("departments/", views.manage_departments, name="manage_departments"),
@@ -34,7 +35,7 @@ urlpatterns = [
     path("departments/<int:department_id>/delete/", views.delete_department, name="delete_department"),
     path("sessions/<int:session_id>/edit/", views.edit_session, name="edit_session"),
     path("sessions/<int:session_id>/delete/", views.delete_session, name="delete_session"),
-    # path("sessions/semesters/add/", views.add_semester, name="add_semester"),
-    # path("sessions/semesters/<int:semester_id>/edit/", views.edit_semester, name="edit_semester"),
-    # path("sessions/semesters/<int:semester_id>/delete/", views.delete_semester, name="delete_semester"),
+    path("sessions/semesters/add/", views.add_semester, name="add_semester"),
+    path("sessions/semesters/<int:semester_id>/edit/", views.edit_semester, name="edit_semester"),
+    path("sessions/semesters/<int:semester_id>/delete/", views.delete_semester, name="delete_semester"),
 ]

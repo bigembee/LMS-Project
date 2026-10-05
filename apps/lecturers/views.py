@@ -38,22 +38,17 @@ def dashboard(request):
             assignment__course__lecturer=request.user, status="submitted"
         ).count()
     """
-    return render(request, "lecturers/dashboard.html")
+    return render(request, "dashboard.html")
 
 
 @lecturer_required
 def my_courses(request):
     """
     List all courses this lecturer is assigned to teach.
-
     URL: /lecturers/courses/
-
-    TODO: Implement:
-        # request.user.courses_taught is available because Course model has:
-        # lecturer = ForeignKey(User, related_name="courses_taught")
-        courses = request.user.courses_taught.select_related("department", "semester")
     """
-    return render(request, "lecturers/my_courses.html")
+    courses = request.user.courses_taught.select_related("department", "semester")
+    return render(request, "lecturers/my_courses.html", {"courses": courses})
 
 
 @lecturer_required
