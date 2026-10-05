@@ -22,6 +22,7 @@ app_name = "students"
 
 urlpatterns = [
     path("dashboard/", views.dashboard, name="dashboard"),
+    path("profile/", views.profile, name="profile"),
     path("courses/", views.my_courses, name="my_courses"),
     path("courses/register/", views.register_course, name="register_course"),
     path("timetable/", views.schedule, name="schedule"),
