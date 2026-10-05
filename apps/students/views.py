@@ -119,7 +119,9 @@ def my_assignments(request):
     enrolled_course_ids = request.user.enrollments.filter(
         status="enrolled"
     ).values_list("course_id", flat=True)
+    
     assignments = Assignment.objects.filter(course_id__in=enrolled_course_ids)
+
     return render(request, "students/my_assignments.html", {"assignments": assignments})
 
 
