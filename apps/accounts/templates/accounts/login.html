@@ -1,0 +1,487 @@
+<<<<<<< HEAD
+<!--<div class="auth-card">
+  <form method="post" class="login-form">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required />
+    </div>
+
+    <button type="submit">Login</button>
+  </form>
+</div>-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Log in</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Parisienne&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* LEFT IMAGE PANEL */
+      .left {
+        width: 34%;
+        min-width: 320px;
+        position: relative;
+        background:
+          radial-gradient(circle at 25% 15%, #0b50e3 0%, transparent 45%),
+          radial-gradient(circle at 85% 80%, #dcdfe4 0%, transparent 50%),
+          linear-gradient(160deg, #0b50e3 0%, #0b50e3 60%, #dcdfe4 100%);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 32px;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        font-size: 18px;
+      }
+      .logo-mark {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        background: #fff;
+        opacity: 0.95;
+        clip-path: polygon(
+          50% 0%,
+          61% 35%,
+          98% 35%,
+          68% 57%,
+          79% 91%,
+          50% 70%,
+          21% 91%,
+          32% 57%,
+          2% 35%,
+          39% 35%
+        );
+      }
+      .quote {
+        max-width: 320px;
+      }
+      .quote p {
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 1.35;
+        margin-bottom: 20px;
+      }
+      .quote .author {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .quote .role {
+        font-size: 12px;
+        opacity: 0.7;
+        margin-top: 2px;
+      }
+
+      /* RIGHT FORM PANEL */
+      .right {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 24px;
+        background: #ffffff;
+      }
+      .form-wrap {
+        width: 100%;
+        max-width: 380px;
+      }
+      .form-wrap h1 {
+        margin-bottom: 8px;
+        color: #111827;
+        font-size: 26px;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+      .form-wrap h1 .edvance-word {
+        color: #0b50e3;
+        font-family: "Parisienne", cursive;
+        font-size: 46px;
+        font-weight: 400;
+        line-height: 1;
+      }
+      .form-wrap .subtitle {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 32px;
+        line-height: 1.5;
+      }
+
+      .field {
+        margin-bottom: 14px;
+      }
+      .field label {
+        display: block;
+        font-size: 11px;
+        color: #9ca3af;
+        padding: 8px 14px 0;
+        border: 1px solid #e5e7eb;
+        border-bottom: none;
+        border-radius: 10px 10px 0 0;
+        background: #fff;
+      }
+      .field input {
+        width: 100%;
+        padding: 2px 14px 10px;
+        font-size: 14px;
+        font-family: inherit;
+        border: 1px solid #e5e7eb;
+        border-top: none;
+        border-radius: 0 0 10px 10px;
+        outline: none;
+        color: #111827;
+      }
+      .field.focused label,
+      .field.focused input,
+      .field input:focus,
+      .field:has(input:focus) label {
+        border-color: #6c5ce7;
+        box-shadow: 0 0 0 1px #6c5ce7;
+      }
+
+      .row-between {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 14px 0 20px;
+      }
+      .forgot {
+        font-size: 13px;
+        color: #6c5ce7;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .remember {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        color: #374151;
+      }
+
+      .switch {
+        position: relative;
+        width: 38px;
+        height: 22px;
+        background: #6c5ce7;
+        border-radius: 999px;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+      .switch::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 18px;
+        height: 18px;
+        background: #fff;
+        border-radius: 50%;
+        transition: left 0.15s;
+      }
+      .switch.off {
+        background: #d1d5db;
+      }
+      .switch.off::after {
+        right: auto;
+        left: 2px;
+      }
+
+      button.submit {
+        width: 100%;
+        padding: 13px;
+        background: #6c5ce7;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      button.submit:hover {
+        background: #5b4bd6;
+      }
+      button.submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 20px 0;
+        color: #9ca3af;
+        font-size: 12px;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #e5e7eb;
+      }
+
+      .oauth-btn {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #fff;
+        font-size: 14px;
+        font-weight: 500;
+        color: #111827;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+      }
+      .oauth-btn:hover {
+        background: #f9fafb;
+      }
+
+      .signup-line {
+        text-align: center;
+        font-size: 13px;
+        color: #6b7280;
+        margin-top: 24px;
+      }
+      .signup-line a {
+        color: #6c5ce7;
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .error {
+        display: none;
+        background: rgba(220, 38, 38, 0.08);
+        border: 1px solid rgba(220, 38, 38, 0.2);
+        color: #b91c1c;
+        font-size: 13px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        margin-bottom: 16px;
+        text-align: center;
+      }
+      .error.visible {
+        display: block;
+      }
+
+      @media (max-width: 760px) {
+        .left {
+          display: none;
+        }
+        .right {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="left">
+      <div class="logo"><span class="logo-mark"></span> edvance</div>
+      <div class="quote">
+        <p>&ldquo;My Virtual Classroom!!! .&rdquo;</p>
+        <div class="author">Table Five</div>
+        <div class="role">Fellows Talent Nation</div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="form-wrap">
+        <h1>Welcome back to <span class="edvance-word">Edvance</span></h1>
+        <p class="subtitle">Your lecture room made remote.</p>
+
+        <div
+          class="error{% if login_error %} visible{% endif %}"
+          id="error-msg"
+        >
+          {{ login_error }}
+        </div>
+
+        <form id="login-form" method="post" action="{% url 'accounts:login' %}">
+          {% csrf_token %}
+          <div class="field">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="user@gmail.com"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="••••••••••"
+              required
+            />
+          </div>
+
+          <div class="row-between">
+            <a href="/reset-password.html" class="forgot">Forgot password?</a>
+            <div class="remember">
+              Remember sign in details
+              <div
+                class="switch"
+                id="remember-toggle"
+                onclick="this.classList.toggle('off')"
+              ></div>
+            </div>
+          </div>
+
+          <button type="submit" class="submit" id="submit-btn">Log in</button>
+        </form>
+
+        <div class="divider">OR</div>
+
+        <!--<div class="oauth-btn">
+          <svg width="16" height="16" viewBox="0 0 48 48">
+            <path
+              fill="#FFC107"
+              d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.1 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"
+            />
+            <path
+              fill="#FF3D00"
+              d="M6.3 14.7l6.6 4.8C14.6 15.6 18.9 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.1 29.5 4 24 4c-7.5 0-14 4.1-17.7 10.7z"
+            />
+            <path
+              fill="#4CAF50"
+              d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.4 26.7 36 24 36c-5.3 0-9.7-3.4-11.3-8.1l-6.5 5C9.9 39.8 16.4 44 24 44z"
+            />
+            <path
+              fill="#1976D2"
+              d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.2 5.6l6.2 5.2C39.9 36.6 44 31.1 44 24c0-1.2-.1-2.4-.4-3.5z"
+            />
+          </svg>
+          Continue with Google
+        </div>-->
+
+        <p class="signup-line">
+          Don't have an account?
+          <a href="/accounts/register/">Sign up</a>
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // The form is submitted normally so Django can create the authenticated session.
+    </script>
+  </body>
+</html>
+=======
+{% extends "base.html" %}
+
+{% block title %}Login - LMS{% endblock %}
+
+{% block content %}
+<div class="login-container" style="max-width: 400px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+    <h1 style="text-align: center; margin-bottom: 30px;">Login</h1>
+
+    {% if form.non_field_errors %}
+        <div class="error-messages" style="background-color: #fee; padding: 10px; border-radius: 4px; margin-bottom: 20px; border-left: 4px solid #f00;">
+            {% for error in form.non_field_errors %}
+                <p style="margin: 5px 0; color: #c00;">{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post" style="display: flex; flex-direction: column; gap: 15px;">
+        {% csrf_token %}
+
+        <!-- Username field -->
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">
+                {{ form.username.label }}
+            </label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="field-errors" style="color: #c00; font-size: 0.9em; margin-top: 5px;">
+                    {% for error in form.username.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Password field -->
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">
+                {{ form.password.label }}
+            </label>
+            {{ form.password }}
+            {% if form.password.errors %}
+                <div class="field-errors" style="color: #c00; font-size: 0.9em; margin-top: 5px;">
+                    {% for error in form.password.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" style="padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; font-weight: bold;">
+            Login
+        </button>
+    </form>
+
+    <!-- Link to registration (once implemented) -->
+    <p style="text-align: center; margin-top: 20px;">
+        Don't have an account? <a href="{% url 'accounts:register' %}" style="color: #007bff; text-decoration: none;">Register here</a>
+    </p>
+</div>
+
+<style>
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1em;
+        box-sizing: border-box;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    }
+</style>
+{% endblock %}
+>>>>>>> 61fd3a40 (TEMPLATES)
