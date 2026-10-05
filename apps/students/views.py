@@ -31,6 +31,7 @@ from django.shortcuts import render
 
 # Import the decorator from the accounts app — it checks that the user is a student
 from apps.accounts.decorators import student_required
+from apps.assignments.models import Assignment, Submission
 
 
 @student_required
@@ -115,21 +116,23 @@ def my_assignments(request):
         # Get all assignments from those courses
         assignments = Assignment.objects.filter(course_id__in=enrolled_course_ids)
     """
-    return render(request, "students/my_assignments.html")
+    enrolled_course_ids = request.user.enrollments.filter(
+        status="enrolled"
+    ).values_list("course_id", flat=True)
+    assignments = Assignment.objects.filter(course_id__in=enrolled_course_ids)
+    return render(request, "students/my_assignments.html", {"assignments": assignments})
 
 
 @student_required
 def my_grades(request):
-    """
-    View the student's grades and results for all submitted assignments.
+    submissions = (
+        Submission.objects
+        .filter(student=request.user, status="graded")
+        .select_related("grade", "assignment", "assignment__course")
+    )
 
-    URL: /students/grades/
-
-    TODO: Implement:
-        submissions = Submission.objects.filter(student=request.user, status="graded")
-            .select_related("grade", "assignment", "assignment__course")
-    """
-    return render(request, "students/my_grades.html")
+    context = {"submissions": submissions}
+    return render(request, "students/my_grades.html", context)
 
 
 @student_required
