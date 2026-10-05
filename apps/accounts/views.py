@@ -27,7 +27,6 @@ from django.shortcuts import render, redirect                   # render templat
 from django.contrib.auth import authenticate, login, logout       # Django authentication helpers
 from django.contrib.auth.decorators import login_required       # Decorator: must be logged in to access
 from django.contrib import messages                             # Flash messages ("Success!", "Error!")
-from django.contrib.auth.forms import AuthenticationForm
 
 from rest_framework import generics, permissions
 from rest_framework.response import Response
@@ -100,17 +99,39 @@ def password_confirmation_view(request):
 def terms_view(request):
     """
     Handle user login.
-    """
-    if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect("accounts:dashboard_redirect")
-    else:
-        form = AuthenticationForm()
 
-    return render(request, "accounts/login.html", {"form": form})
+    GET request: Display the login form
+    POST request: Validate credentials, log user in, redirect to dashboard
+
+    FLOW: User visits /accounts/login/ → enters username & password → submits →
+          Django checks credentials → if valid, creates a session → redirect to dashboard
+
+    TODO: Implement this — use LoginForm from forms.py or Django's AuthenticationForm
+    """
+    return render(request,'accounts/terms.html')
+
+def login_view(request):
+    """Authenticate a user and redirect them to their role dashboard."""
+    if request.method == "POST":
+        identifier = request.POST.get("email", "").strip()
+        password = request.POST.get("password", "")
+
+        # The interface accepts either an email address or a username.
+        user = User.objects.filter(email__iexact=identifier).first()
+        username = user.username if user else identifier
+        authenticated_user = authenticate(request, username=username, password=password)
+
+        if authenticated_user is not None:
+            login(request, authenticated_user)
+            return redirect("accounts:dashboard_redirect")
+
+        return render(
+            request,
+            "accounts/login.html",
+            {"login_error": "Invalid email/username or password."},
+        )
+
+    return render(request, "accounts/login.html")
 
 
 
