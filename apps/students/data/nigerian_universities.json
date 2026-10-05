@@ -1,0 +1,112 @@
+{
+  "catalog_date": "2026-10-02",
+  "note": "Curated starter catalog from official university pages, not a complete list of Nigerian universities or all academic units. Structures can change; students can enter units that are not listed.",
+  "universities": [
+    {
+      "name": "Obafemi Awolowo University",
+      "source_url": "https://staffdirectory.oauife.edu.ng/",
+      "faculties": [
+        {"name":"Faculty of Administration","departments":["Accounting","Business Administration","International Relations","Local Government and Development Studies","Public Administration"]},
+        {"name":"Faculty of Agriculture","departments":["Agricultural Economics","Agricultural Extension","Animal Science","Crop Production","Plant Breeding","Soil Science"]},
+        {"name":"Faculty of Arts","departments":["Dramatic Arts","English","Foreign Languages","History","Institute of Cultural Studies","Linguistics and African Languages","Music","Philosophy","Religious Studies"]},
+        {"name":"Faculty of Basic Medical Sciences","departments":["Anatomy","Biochemistry","Microbiology","Pathology","Physiology"]},
+        {"name":"Faculty of Clinical Sciences","departments":["Internal Medicine","Obstetrics and Gynaecology","Pediatrics","Radiology","Surgery"]},
+        {"name":"Faculty of Computing Science and Engineering","departments":["Computer Engineering","Computer Science and Cybersecurity","Information Systems","Intelligent Systems Engineering","Software Engineering"]},
+        {"name":"Faculty of Dentistry","departments":["Child Dental Health","Oral and Maxillofacial Surgery","Oral Medicine and Oral Pathology","Preventive and Community Dentistry"]},
+        {"name":"Faculty of Education","departments":["Adult Education and Lifelong Learning","Arts and Social Science Education","Counselling and Human Development","Educational Foundations","Educational Management","Educational Technology and Library Studies","Kinesiology, Health Education and Recreation","Science and Technology Education"]},
+        {"name":"Faculty of Environmental Design and Management","departments":["Architecture","Building","Estate Management","Fine and Applied Arts","Quantity Surveying","Surveying and Geoinformatics","Urban and Regional Planning"]},
+        {"name":"Faculty of Law","departments":["Civil Law","Commercial Law","Constitutional Law","Criminal Law","International Law"]},
+        {"name":"Faculty of Nursing Sciences","departments":["Community-Public Health Nursing","Maternal and Child Health Nursing","Medical Surgical Nursing","Mental Health and Psychiatric Nursing"]},
+        {"name":"Faculty of Pharmacy","departments":["Clinical Pharmacy and Pharmacy Administration","Drug Research and Production Unit","Pharmaceutical Chemistry","Pharmaceutical Microbiology","Pharmaceutics and Industrial Pharmacy","Pharmacognosy","Pharmacology"]},
+        {"name":"Faculty of Science","departments":["Biochemistry and Molecular Biology","Biology","Botany","Chemistry","Geology","Mathematics","Microbiology","Physics","Zoology"]},
+        {"name":"Faculty of Social Sciences","departments":["Demography and Social Statistics","Economics","Geography","Political Science","Psychology","Sociology and Anthropology"]},
+        {"name":"Faculty of Technology","departments":["Aerospace Engineering","Agricultural and Environmental Engineering","Chemical Engineering","Civil Engineering","Computer Science and Engineering","Electronic and Electrical Engineering","Food Science and Technology","Materials Science and Engineering","Mechanical Engineering"]}
+      ]
+    },
+    {
+      "name": "University of Lagos",
+      "source_url": "https://unilag.edu.ng/when-the-future-calls-unilag-answers-with-a-new-vision/",
+      "faculties": [
+        {"name":"Architecture","departments":["Architecture","Landscape Architecture and Urban Design","Interior Architecture and Design"]},
+        {"name":"Arts","departments":["English","European Languages and Integration Studies","History and Strategic Studies","Linguistics, African and Asian Studies","Philosophy","Religious Studies"]},
+        {"name":"Basic Clinical Sciences","departments":["Anatomic and Molecular Pathology","Haematology and Blood Transfusion","Medical Microbiology and Parasitology","Clinical Pathology","Clinical Pharmacology"]},
+        {"name":"Basic Medical Sciences","departments":["Anatomy","Physiology","Medical Biochemistry","Pharmacology, Therapeutics and Toxicology"]},
+        {"name":"Clinical Sciences","departments":["Anaesthesia","Community Health and Primary Care","Medicine","Obstetrics and Gynaecology","Ophthalmology","Paediatrics","Psychiatry","Radiation Biology, Radiotherapy and Radiodiagnosis","Surgery"]},
+        {"name":"Communication and Media Studies","departments":["Mass Communication","Public Relations and Advertising","Journalism, Broadcasting and Media Studies"]},
+        {"name":"Computing and Informatics","departments":["Computer Science","Intelligent Systems and Robotics","Cybersecurity and Software Engineering"]},
+        {"name":"Creative Arts","departments":["Music and Sound Production","Theatre Arts and Film Studies","Fine and Applied Arts"]},
+        {"name":"Dental Sciences","departments":["Child Dental Health","Oral and Maxillofacial Pathology/Biology","Oral and Maxillofacial Surgery","Preventive Dentistry","Restorative Dentistry"]},
+        {"name":"Education","departments":["Adult Education","Arts Education","Educational Foundations","Educational Management","Human Kinetics and Health Education","Science Education","Social Sciences Education","Technology and Vocational Education"]},
+        {"name":"Engineering","departments":["Biomedical Engineering","Chemical Engineering","Petroleum and Gas Engineering","Civil and Environmental Engineering","Electrical and Electronics Engineering","Mechanical Engineering","Metallurgical and Materials Engineering","Surveying and Geoinformatics","Systems Engineering"]},
+        {"name":"Environmental Sciences","departments":["Building","Estate Management","Quantity Surveying","Urban and Regional Planning"]},
+        {"name":"Health Professions","departments":["Medical Laboratory Science","Nursing Science","Physiotherapy","Radiography"]},
+        {"name":"Law","departments":["Commercial and Industrial Law","Jurisprudence and International Law","Private and Property Law","Public Law"]},
+        {"name":"Life Sciences","departments":["Biochemistry","Botany","Cell Biology and Genetics","Marine Science","Microbiology","Zoology","Fisheries and Aquaculture"]},
+        {"name":"Management Sciences","departments":["Accounting","Actuarial Science and Insurance","Business Administration","Employment Relations and Human Resource Management","Finance"]},
+        {"name":"Pharmacy","departments":["Clinical Pharmacy and Biopharmacy","Pharmaceutical Chemistry","Pharmaceutical Microbiology and Biotechnology","Pharmaceutics and Pharmaceutical Technology","Pharmacognosy"]},
+        {"name":"Physical and Earth Sciences","departments":["Chemistry","Geosciences","Mathematics","Physics","Statistics"]},
+        {"name":"Social Sciences","departments":["Economics","Geography","Library and Information Science","Political Science","Psychology","Social Work","Sociology"]}
+      ]
+    },
+    {
+      "name": "University of Nigeria, Nsukka",
+      "source_url": "https://www.unn.edu.ng/departments/",
+      "faculties": [
+        {"name":"Faculty of Agriculture","departments":["Agricultural Economics","Agricultural Extension","Animal Science","Soil Science","Nutrition and Dietetics","Home Science and Management","Food Science and Technology","Crop Science"]},
+        {"name":"Faculty of Arts","departments":["History and International Studies","Mass Communication","Archaeology and Tourism","English and Literary Studies","Fine and Applied Arts","Linguistics, Igbo and Other Nigerian Languages","Music","Theatre and Film Studies","Foreign Language and Literature"]},
+        {"name":"Faculty of Biomedical Sciences","departments":[]},
+        {"name":"Faculty of Biological Sciences","departments":["Biochemistry","Microbiology","Plant Science and Biotechnology","Genetics and Biotechnology","Zoology and Environmental Biology"]},
+        {"name":"Faculty of Business Administration","departments":["Accountancy","Marketing","Banking and Finance","Management"]},
+        {"name":"Faculty of Dentistry","departments":[]},
+        {"name":"Faculty of Education","departments":["Adult Education","Arts Education","Computer Education","Educational Foundations","Library Science","Human Kinetics and Health Education","Science Education","Social Science Education"]},
+        {"name":"Faculty of Engineering","departments":["Agricultural and Bioresources Engineering","Civil Engineering","Electrical Engineering","Electronic Engineering","Mechanical Engineering","Metallurgical and Materials Engineering","Mechatronic Engineering","Biomedical Engineering"]},
+        {"name":"Faculty of Environmental Studies","departments":["Estate Management","Architecture","Urban and Regional Planning","Geoinformatics and Surveying"]},
+        {"name":"Faculty of Health Sciences","departments":[]},
+        {"name":"Faculty of Law","departments":["International and Comparative Law","Commercial and Corporate Law","Customary and Indigenous Law","Jurisprudence and Legal Theory","Property Law","Public Law","Private Law"]},
+        {"name":"Faculty of Medical Sciences","departments":[]},
+        {"name":"Faculty of Pharmaceutical Sciences","departments":["Pharmaceutical and Medicinal Chemistry","Pharmacology and Toxicology","Pharmaceutics","Pharmaceutical Technology and Industrial Pharmacy","Pharmacognosy and Environmental Medicines","Clinical Pharmacy and Pharmacy Management","Pharmaceutical Microbiology and Biotechnology"]},
+        {"name":"Faculty of Physical Sciences","departments":["Pure and Industrial Chemistry","Computer Science","Geology","Mathematics","Physics and Astronomy","Science Laboratory Technology","Statistics"]},
+        {"name":"Faculty of Social Sciences","departments":["Public Administration and Local Government","Economics","Political Science","Social Work","Religion and Cultural Studies","Psychology","Philosophy","Geography","Sociology and Anthropology"]},
+        {"name":"Faculty of Veterinary Medicine","departments":["Veterinary Pathology and Microbiology","Veterinary Obstetrics and Reproductive Diseases","Veterinary Physiology and Pharmacology","Veterinary Anatomy","Veterinary Medicine","Veterinary Animal Health and Production","Veterinary Parasitology and Entomology","Veterinary Public Health and Preventive Medicine","Veterinary Surgery"]},
+        {"name":"Faculty of Vocational Technical Education","departments":["Agricultural Education","Business Education","Computer Education","Industrial Technical Education","Home Economics and Hospitality Management Education"]}
+      ]
+    },
+    {
+      "name": "University of Ibadan",
+      "source_url": "https://ui.edu.ng/content/faculties-and-departments-0",
+      "faculties": [
+        {"name":"Faculty of Agriculture and Forestry","departments":["Agricultural Economics","Agronomy","Forest Resources Management"]},
+        {"name":"Faculty of Arts","departments":["Arabic and Islamic Studies","Communication and Language Arts","European Studies","History","Theatre Arts"]},
+        {"name":"College of Medicine","departments":["Biochemistry","Epidemiology, Medical Statistics and Environmental Health","Health Policy and Management","Health Promotion and Education","Medicine","Obstetrics and Gynaecology","Physiology","Preventive Medicine and Primary Care","Psychiatry"]},
+        {"name":"Faculty of Education","departments":["Adult Education","Guidance and Counselling","Human Kinetics and Health Education"]},
+        {"name":"Faculty of Pharmacy","departments":["Pharmaceutics and Industrial Pharmacy"]},
+        {"name":"Faculty of Science","departments":["Botany","Geology","Microbiology","Zoology"]},
+        {"name":"Faculty of the Social Sciences","departments":["Economics","Geography","Sociology"]},
+        {"name":"Faculty of Technology","departments":["Electrical and Electronic Engineering","Mechanical Engineering","Industrial and Production Engineering"]},
+        {"name":"Faculty of Veterinary Medicine","departments":["Veterinary Physiology, Biochemistry and Pharmacology"]}
+      ]
+    },
+    {
+      "name": "University of Ilorin",
+      "source_url": "https://www.unilorin.edu.ng/academics/",
+      "faculties": [
+        {"name":"Faculty of Agriculture","departments":["Agricultural Economics and Farm Management","Agricultural Extension and Rural Development","Agronomy","Animal Production","Crop Protection","Food Science","Home Economics and Food Science","Soil Science"]},
+        {"name":"Faculty of Arts","departments":["Arabic","English","French","History and International Studies","Linguistics and Nigerian Languages","Music","Performing Arts","Religions"]},
+        {"name":"Faculty of Communication and Information Sciences","departments":["Computer Science","Information Technology","Library and Information Science","Mass Communication","Telecommunication Science"]},
+        {"name":"Faculty of Education","departments":["Adult and Primary Education","Arts Education","Counsellor Education","Educational Management","Educational Technology","Health Promotion and Environmental Health Education","Science Education","Social Sciences Education"]},
+        {"name":"Faculty of Engineering and Technology","departments":["Agricultural and Biosystems Engineering","Biomedical Engineering","Chemical Engineering","Civil Engineering","Computer Engineering","Electrical and Electronics Engineering","Food Engineering","Materials and Metallurgical Engineering","Mechanical Engineering","Water Resources and Environmental Engineering"]},
+        {"name":"Faculty of Environmental Sciences","departments":["Architecture","Estate Management","Quantity Surveying","Surveying and Geo-Informatics","Urban and Regional Planning"]},
+        {"name":"Faculty of Law","departments":["Jurisprudence and International Law","Public Law","Private and Property Law","Commercial and Industrial Law"]},
+        {"name":"Faculty of Life Sciences","departments":["Biochemistry","Microbiology","Plant Biology","Zoology"]},
+        {"name":"Faculty of Management Sciences","departments":["Accounting","Business Administration","Finance","Industrial Relations and Personnel Management","Marketing","Public Administration"]},
+        {"name":"Faculty of Pharmaceutical Sciences","departments":["Clinical Pharmacy and Pharmacy Practice","Pharmaceutical and Medicinal Chemistry","Pharmaceutical Microbiology and Biotechnology","Pharmaceutics and Industrial Pharmacy","Pharmacognosy and Drug Development","Pharmacology and Toxicology"]},
+        {"name":"Faculty of Physical Sciences","departments":["Chemistry","Geology and Mineral Science","Geophysics","Mathematics","Physics","Statistics"]},
+        {"name":"Faculty of Social Sciences","departments":["Criminology and Security Studies","Economics","Geography and Environmental Management","Political Science","Psychology","Social Work","Sociology"]},
+        {"name":"Faculty of Veterinary Medicine","departments":["Veterinary Anatomy","Veterinary Medicine","Veterinary Microbiology","Veterinary Parasitology and Entomology","Veterinary Pathology","Veterinary Pharmacology and Toxicology","Veterinary Physiology and Biochemistry","Veterinary Public Health and Preventive Medicine","Veterinary Surgery and Radiology","Theriogenology and Production"]},
+        {"name":"Faculty of Basic Medical Sciences","departments":[]},
+        {"name":"Faculty of Basic Clinical Sciences","departments":[]},
+        {"name":"Faculty of Clinical Sciences","departments":[]}
+      ]
+    }
+  ]
+}
