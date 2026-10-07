@@ -1,0 +1,509 @@
+{% extends "base.html" %}
+
+{% block title %}View Submissions{% endblock %}
+
+{% block extra_css %}
+<style>
+    .submissions-page {
+        padding: 28px;
+        background: #f8fafc;
+        min-height: calc(100vh - 80px);
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #0b50e3 0%, #3b82f6 100%);
+        color: white;
+        border-radius: 16px;
+        padding: 28px 30px;
+        margin-bottom: 24px;
+        box-shadow: 0 8px 24px rgba(11, 80, 227, 0.18);
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        color: rgba(255, 255, 255, 0.85);
+        text-decoration: none;
+        font-size: 14px;
+        margin-bottom: 14px;
+    }
+
+    .back-link:hover {
+        color: white;
+    }
+
+    .page-header h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .page-header p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.88);
+        font-size: 15px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 20px;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
+    }
+
+    .stat-label {
+        color: #64748b;
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .stat-value {
+        color: #0f172a;
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .stat-card.blue .stat-value {
+        color: #0b50e3;
+    }
+
+    .stat-card.green .stat-value {
+        color: #16a34a;
+    }
+
+    .stat-card.orange .stat-value {
+        color: #d97706;
+    }
+
+    .stat-card.red .stat-value {
+        color: #dc2626;
+    }
+
+    .submissions-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 24px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .card-header h2 {
+        margin: 0;
+        font-size: 18px;
+        color: #0f172a;
+    }
+
+    .course-name {
+        color: #64748b;
+        font-size: 13px;
+        margin-top: 4px;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .submissions-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .submissions-table th {
+        text-align: left;
+        padding: 14px 20px;
+        background: #f8fafc;
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        white-space: nowrap;
+    }
+
+    .submissions-table td {
+        padding: 17px 20px;
+        border-top: 1px solid #e2e8f0;
+        color: #334155;
+        font-size: 14px;
+        vertical-align: middle;
+    }
+
+    .student-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .student-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0b50e3, #3b82f6);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .student-name {
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    .student-email {
+        color: #64748b;
+        font-size: 12px;
+        margin-top: 2px;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status-submitted {
+        background: #eff6ff;
+        color: #0b50e3;
+    }
+
+    .status-graded {
+        background: #f0fdf4;
+        color: #15803d;
+    }
+
+    .status-returned {
+        background: #fff7ed;
+        color: #c2410c;
+    }
+
+    .score {
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .score-empty {
+        color: #94a3b8;
+    }
+
+    .date {
+        color: #64748b;
+        white-space: nowrap;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 13px;
+        border-radius: 8px;
+        background: #0b50e3;
+        color: white;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+        transition: background 0.2s ease, transform 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .action-btn:hover {
+        background: #0842ba;
+        color: white;
+        transform: translateY(-1px);
+    }
+
+    .view-file {
+        color: #0b50e3;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    .view-file:hover {
+        text-decoration: underline;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 24px;
+    }
+
+    .empty-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 18px;
+        border-radius: 50%;
+        background: #eff6ff;
+        color: #0b50e3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+    }
+
+    .empty-state h3 {
+        margin: 0 0 8px;
+        color: #0f172a;
+        font-size: 18px;
+    }
+
+    .empty-state p {
+        margin: 0;
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    @media (max-width: 1000px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 650px) {
+        .submissions-page {
+            padding: 18px;
+        }
+
+        .page-header {
+            padding: 22px;
+        }
+
+        .page-header h1 {
+            font-size: 23px;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .card-header {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 5px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="submissions-page">
+
+    <div class="page-header">
+        <a href="{% url 'lecturers:my_courses' %}" class="back-link">
+            ← Back to My Courses
+        </a>
+
+        <h1>{{ assignment.title }}</h1>
+
+        <p>
+            {{ assignment.course.code }} ·
+            {{ assignment.course.title }}
+        </p>
+    </div>
+
+    <div class="stats-grid">
+
+        <div class="stat-card blue">
+            <div class="stat-label">Total Submissions</div>
+            <div class="stat-value">{{ total_submissions }}</div>
+        </div>
+
+        <div class="stat-card green">
+            <div class="stat-label">Graded</div>
+            <div class="stat-value">{{ graded_count }}</div>
+        </div>
+
+        <div class="stat-card orange">
+            <div class="stat-label">Pending</div>
+            <div class="stat-value">{{ pending_count }}</div>
+        </div>
+
+        <div class="stat-card red">
+            <div class="stat-label">Returned</div>
+            <div class="stat-value">{{ returned_count }}</div>
+        </div>
+
+    </div>
+
+    <div class="submissions-card">
+
+        <div class="card-header">
+            <div>
+                <h2>Student Submissions</h2>
+                <div class="course-name">
+                    Maximum score: {{ assignment.max_score }}
+                </div>
+            </div>
+        </div>
+
+        {% if submissions %}
+
+            <div class="table-wrapper">
+                <table class="submissions-table">
+
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Submitted</th>
+                            <th>Status</th>
+                            <th>Score</th>
+                            <th>File</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for submission in submissions %}
+
+                            <tr>
+
+                                <td>
+                                    <div class="student-info">
+
+                                        <div class="student-avatar">
+                                            {{ submission.student.first_name|first|upper }}{{ submission.student.last_name|first|upper }}
+                                        </div>
+
+                                        <div>
+                                            <div class="student-name">
+                                                {{ submission.student.get_full_name|default:submission.student.username }}
+                                            </div>
+
+                                            <div class="student-email">
+                                                {{ submission.student.email }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="date">
+                                        {{ submission.submitted_at|date:"M d, Y" }}
+                                        <br>
+                                        {{ submission.submitted_at|date:"g:i A" }}
+                                    </span>
+                                </td>
+
+                                <td>
+
+                                    {% if submission.status == "graded" %}
+                                        <span class="status-badge status-graded">
+                                            Graded
+                                        </span>
+
+                                    {% elif submission.status == "returned" %}
+                                        <span class="status-badge status-returned">
+                                            Returned
+                                        </span>
+
+                                    {% else %}
+                                        <span class="status-badge status-submitted">
+                                            Submitted
+                                        </span>
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+
+                                    {% if submission.grade %}
+                                        <span class="score">
+                                            {{ submission.grade.score }}/{{ assignment.max_score }}
+                                        </span>
+                                    {% else %}
+                                        <span class="score-empty">
+                                            Not graded
+                                        </span>
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+
+                                    {% if submission.file %}
+                                        <a
+                                            href="{{ submission.file.url }}"
+                                            target="_blank"
+                                            class="view-file"
+                                        >
+                                            View file
+                                        </a>
+                                    {% else %}
+                                        <span class="score-empty">
+                                            No file
+                                        </span>
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+
+                                    <a
+                                        href="{% url 'lecturers:grade_submission' submission.id %}"
+                                        class="action-btn"
+                                    >
+                                        {% if submission.grade %}
+                                            View Grade
+                                        {% else %}
+                                            Grade
+                                        {% endif %}
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    ✓
+                </div>
+
+                <h3>No submissions yet</h3>
+
+                <p>
+                    Students have not submitted work for this assignment yet.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,631 @@
+{% extends "base.html" %}
+
+{% block title %}Manage {{ course.code }} | LMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .manage-course-page {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .course-hero {
+        background: linear-gradient(135deg, #0b50e3 0%, #3b82f6 100%);
+        color: white;
+        border-radius: 16px;
+        padding: 30px 32px;
+        margin-bottom: 24px;
+        box-shadow: 0 10px 25px rgba(11, 80, 227, 0.15);
+    }
+
+    .course-hero-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .course-code {
+        display: inline-block;
+        margin-bottom: 8px;
+        padding: 5px 10px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.16);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    .course-hero h1 {
+        margin: 0 0 8px;
+        font-size: 30px;
+        font-weight: 700;
+    }
+
+    .course-hero-description {
+        margin: 0;
+        max-width: 750px;
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.6;
+        font-size: 14px;
+    }
+
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 16px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.14);
+        color: white;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .back-button:hover {
+        background: rgba(255, 255, 255, 0.22);
+    }
+
+    .course-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 22px;
+    }
+
+    .meta-item {
+        padding: 9px 13px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.12);
+        font-size: 13px;
+    }
+
+    .meta-item strong {
+        margin-right: 4px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+    }
+
+    .stat-label {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .stat-value {
+        color: #0b50e3;
+        font-size: 25px;
+        font-weight: 700;
+    }
+
+    .content-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .content-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+    }
+
+    .content-card.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 18px 20px;
+        border-bottom: 1px solid #e2e8f0;
+        background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+    }
+
+    .card-header h2 {
+        margin: 0;
+        color: #1e293b;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .card-count {
+        min-width: 26px;
+        padding: 4px 8px;
+        border-radius: 20px;
+        background: #dbeafe;
+        color: #0b50e3;
+        font-size: 12px;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .description {
+        margin: 0;
+        color: #475569;
+        line-height: 1.7;
+        font-size: 14px;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .data-table th {
+        padding: 11px 14px;
+        background: #f8fafc;
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 700;
+        text-align: left;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+
+    .data-table td {
+        padding: 13px 14px;
+        border-top: 1px solid #eef2f7;
+        color: #334155;
+        font-size: 13px;
+    }
+
+    .student-name {
+        color: #1e293b;
+        font-weight: 600;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 9px;
+        border-radius: 20px;
+        background: #dcfce7;
+        color: #166534;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .list-item {
+        padding: 15px 0;
+        border-bottom: 1px solid #eef2f7;
+    }
+
+    .list-item:first-child {
+        padding-top: 0;
+    }
+
+    .list-item:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .item-title {
+        margin: 0 0 5px;
+        color: #1e293b;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .item-meta {
+        margin: 0;
+        color: #64748b;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .item-link {
+        color: #0b50e3;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .item-link:hover {
+        text-decoration: underline;
+    }
+
+    .empty-state {
+        padding: 25px 10px;
+        text-align: center;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .empty-state strong {
+        display: block;
+        margin-bottom: 5px;
+        color: #334155;
+        font-size: 14px;
+    }
+
+    .audience-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 6px;
+        background: #eff6ff;
+        color: #1d4ed8;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    @media (max-width: 1000px) {
+        .stats-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 750px) {
+        .course-hero-top {
+            flex-direction: column;
+        }
+
+        .content-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .content-card.full-width {
+            grid-column: auto;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 500px) {
+        .course-hero {
+            padding: 24px 20px;
+        }
+
+        .course-hero h1 {
+            font-size: 24px;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .card-body {
+            padding: 16px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="manage-course-page">
+
+    <!-- Course Header -->
+    <section class="course-hero">
+        <div class="course-hero-top">
+
+            <div>
+                <span class="course-code">{{ course.code }}</span>
+
+                <h1>{{ course.title }}</h1>
+
+                {% if course.description %}
+                    <p class="course-hero-description">
+                        {{ course.description }}
+                    </p>
+                {% else %}
+                    <p class="course-hero-description">
+                        No course description has been added yet.
+                    </p>
+                {% endif %}
+            </div>
+
+            <a
+                href="{% url 'lecturers:my_courses' %}"
+                class="back-button"
+            >
+                ← My Courses
+            </a>
+
+        </div>
+
+        <div class="course-meta">
+            <div class="meta-item">
+                <strong>Department:</strong>
+                {{ course.department.name }}
+            </div>
+
+            <div class="meta-item">
+                <strong>Semester:</strong>
+                {{ course.semester }}
+            </div>
+
+            <div class="meta-item">
+                <strong>Credit Units:</strong>
+                {{ course.credit_units }}
+            </div>
+
+            <div class="meta-item">
+                <strong>Maximum Students:</strong>
+                {{ course.max_students }}
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics -->
+    <section class="stats-grid">
+
+        <div class="stat-card">
+            <div class="stat-label">ENROLLED STUDENTS</div>
+            <div class="stat-value">{{ course.enrolled_count }}</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">MODULES</div>
+            <div class="stat-value">{{ modules|length }}</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">MATERIALS</div>
+            <div class="stat-value">{{ material_count }}</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">LECTURES</div>
+            <div class="stat-value">{{ lectures|length }}</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">ASSIGNMENTS</div>
+            <div class="stat-value">{{ assignments|length }}</div>
+        </div>
+
+    </section>
+
+    <!-- Description + Modules -->
+    <div class="content-grid">
+
+        <section class="content-card">
+            <div class="card-header">
+                <h2>Course Description</h2>
+            </div>
+
+            <div class="card-body">
+                {% if course.description %}
+                    <p class="description">
+                        {{ course.description }}
+                    </p>
+                {% else %}
+                    <div class="empty-state">
+                        No course description available.
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="content-card">
+            <div class="card-header">
+                <h2>Modules</h2>
+                <span class="card-count">{{ modules|length }}</span>
+            </div>
+
+            <div class="card-body">
+                {% if modules %}
+                    {% for module in modules %}
+                        <div class="list-item">
+                            <p class="item-title">
+                                {{ forloop.counter }}. {{ module.name }}
+                            </p>
+
+                            <p class="item-meta">
+                                {{ module.materials.all|length }} material{{ module.materials.all|length|pluralize }}
+                            </p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <strong>No modules yet</strong>
+                        Modules for this course will appear here.
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Students -->
+    <section class="content-card full-width" style="margin-bottom: 20px;">
+        <div class="card-header">
+            <h2>Enrolled Students</h2>
+            <span class="card-count">{{ enrollments|length }}</span>
+        </div>
+
+        {% if enrollments %}
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Status</th>
+                            <th>Enrolled</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for enrollment in enrollments %}
+                            <tr>
+                                <td>
+                                    <span class="student-name">
+                                        {{ enrollment.student }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="status-badge">
+                                        {{ enrollment.get_status_display }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    {{ enrollment.enrolled_at|date:"M d, Y" }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <strong>No students enrolled</strong>
+                Students enrolled in this course will appear here.
+            </div>
+        {% endif %}
+    </section>
+
+    <!-- Lectures + Assignments -->
+    <div class="content-grid">
+
+        <section class="content-card">
+            <div class="card-header">
+                <h2>Lectures</h2>
+                <span class="card-count">{{ lectures|length }}</span>
+            </div>
+
+            <div class="card-body">
+                {% if lectures %}
+                    {% for lecture in lectures %}
+                        <div class="list-item">
+                            <p class="item-title">
+                                {{ lecture.title }}
+                            </p>
+
+                            {% if lecture.description %}
+                                <p class="item-meta">
+                                    {{ lecture.description }}
+                                </p>
+                            {% endif %}
+
+                            {% if lecture.video_url %}
+                                <p class="item-meta" style="margin-top: 7px;">
+                                    <a
+                                        href="{{ lecture.video_url }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="item-link"
+                                    >
+                                        Watch Lecture →
+                                    </a>
+                                </p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <strong>No lectures yet</strong>
+                        Course lectures will appear here.
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="content-card">
+            <div class="card-header">
+                <h2>Assignments</h2>
+                <span class="card-count">{{ assignments|length }}</span>
+            </div>
+
+            <div class="card-body">
+                {% if assignments %}
+                    {% for assignment in assignments %}
+                        <div class="list-item">
+                            <p class="item-title">
+                                {{ assignment.title }}
+                            </p>
+
+                            <p class="item-meta">
+                                Due:
+                                {{ assignment.due_date|date:"M d, Y, g:i A" }}
+                            </p>
+
+                            <p class="item-meta">
+                                Maximum Score: {{ assignment.max_score }}
+                            </p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <strong>No assignments yet</strong>
+                        Assignments for this course will appear here.
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Announcements -->
+    <section class="content-card full-width">
+        <div class="card-header">
+            <h2>Course Announcements</h2>
+            <span class="card-count">{{ announcements|length }}</span>
+        </div>
+
+        <div class="card-body">
+            {% if announcements %}
+                {% for announcement in announcements %}
+                    <div class="list-item">
+
+                        <p class="item-title">
+                            {{ announcement.title }}
+                        </p>
+
+                        <p class="item-meta">
+                            <span class="audience-badge">
+                                {{ announcement.get_audience_display }}
+                            </span>
+
+                            &nbsp;
+
+                            {{ announcement.created_at|date:"M d, Y, g:i A" }}
+                        </p>
+
+                        <p class="item-meta" style="margin-top: 8px;">
+                            {{ announcement.content }}
+                        </p>
+
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <strong>No announcements yet</strong>
+                    Course-specific announcements will appear here.
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+</div>
+{% endblock %}

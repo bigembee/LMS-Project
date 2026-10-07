@@ -1,0 +1,428 @@
+{% extends "base.html" %}
+
+{% block title %}Create Assignment{% endblock %}
+
+{% block extra_css %}
+<style>
+    .assignment-page {
+        padding: 10px 0 30px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .assignment-header {
+        background: linear-gradient(
+            135deg,
+            #0b50e3 0%,
+            #3b82f6 55%,
+            #93c5fd 100%
+        );
+        border-radius: 18px;
+        padding: 30px;
+        color: #ffffff;
+        margin-bottom: 28px;
+        box-shadow: 0 10px 25px rgba(11, 80, 227, 0.15);
+    }
+
+    .assignment-header h1 {
+        margin: 0 0 8px;
+        font-size: 30px;
+        font-weight: 700;
+    }
+
+    .assignment-header p {
+        margin: 0;
+        font-size: 15px;
+        opacity: 0.92;
+    }
+
+    .assignment-form-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 5px 18px rgba(15, 23, 42, 0.06);
+    }
+
+    .form-section {
+        margin-bottom: 30px;
+    }
+
+    .form-section:last-of-type {
+        margin-bottom: 0;
+    }
+
+    .section-title {
+        margin: 0 0 18px;
+        color: #1e293b;
+        font-size: 18px;
+        font-weight: 700;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-label {
+        color: #334155;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .required {
+        color: #dc2626;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #cbd5e1;
+        border-radius: 9px;
+        padding: 12px 14px;
+        background: #ffffff;
+        color: #1e293b;
+        font-size: 14px;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+        border-color: #0b50e3;
+        box-shadow: 0 0 0 3px rgba(11, 80, 227, 0.10);
+    }
+
+    .form-textarea {
+        min-height: 180px;
+        resize: vertical;
+        line-height: 1.6;
+    }
+
+    .file-input {
+        padding: 10px;
+        background: #f8fafc;
+    }
+
+    .help-text {
+        color: #64748b;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .date-time-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 30px;
+        padding-top: 24px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 130px;
+        padding: 12px 20px;
+        border-radius: 9px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+        box-sizing: border-box;
+    }
+
+    .button:hover {
+        transform: translateY(-1px);
+    }
+
+    .button-secondary {
+        background: #f1f5f9;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+    }
+
+    .button-secondary:hover {
+        color: #334155;
+    }
+
+    .button-primary {
+        border: none;
+        background: linear-gradient(
+            135deg,
+            #0b50e3 0%,
+            #3b82f6 100%
+        );
+        color: #ffffff;
+        box-shadow: 0 5px 14px rgba(11, 80, 227, 0.20);
+    }
+
+    .button-primary:hover {
+        opacity: 0.93;
+    }
+
+    .empty-courses {
+        background: linear-gradient(
+            135deg,
+            #eff6ff 0%,
+            #dbeafe 100%
+        );
+        border: 1px solid #bfdbfe;
+        border-radius: 12px;
+        padding: 18px;
+        color: #1e40af;
+        font-size: 14px;
+    }
+
+    @media (max-width: 700px) {
+        .assignment-page {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .assignment-header {
+            padding: 24px 20px;
+        }
+
+        .assignment-header h1 {
+            font-size: 25px;
+        }
+
+        .assignment-form-card {
+            padding: 22px 18px;
+        }
+
+        .form-grid,
+        .date-time-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group.full-width {
+            grid-column: auto;
+        }
+
+        .form-actions {
+            flex-direction: column-reverse;
+        }
+
+        .button {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="assignment-page">
+
+    <div class="assignment-header">
+        <h1>Create Assignment</h1>
+        <p>Create and publish a new assignment for one of your courses.</p>
+    </div>
+
+    <div class="assignment-form-card">
+
+        <form method="post" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <div class="form-section">
+                <h2 class="section-title">Assignment Details</h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group full-width">
+                        <label class="form-label" for="course">
+                            Course <span class="required">*</span>
+                        </label>
+
+                        {% if courses %}
+                            <select
+                                class="form-select"
+                                id="course"
+                                name="course"
+                                required
+                            >
+                                <option value="">Select a course</option>
+
+                                {% for course in courses %}
+                                    <option value="{{ course.pk }}">
+                                        {{ course.code }} — {{ course.title }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                            <span class="help-text">
+                                Only courses assigned to you are shown.
+                            </span>
+                        {% else %}
+                            <div class="empty-courses">
+                                You currently have no courses assigned to you.
+                                You cannot create an assignment until a course
+                                is assigned to you.
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label" for="title">
+                            Assignment Title <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="title"
+                            name="title"
+                            placeholder="e.g. Database Design Project"
+                            maxlength="200"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label" for="description">
+                            Instructions / Description <span class="required">*</span>
+                        </label>
+
+                        <textarea
+                            class="form-textarea"
+                            id="description"
+                            name="description"
+                            placeholder="Enter the assignment instructions, requirements, and other information students need to know."
+                            required
+                        ></textarea>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="form-section">
+                <h2 class="section-title">Assessment Settings</h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label class="form-label" for="max_score">
+                            Maximum Score <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-input"
+                            id="max_score"
+                            name="max_score"
+                            min="1"
+                            value="100"
+                            required
+                        >
+
+                        <span class="help-text">
+                            The highest score a student can receive.
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Due Date & Time <span class="required">*</span>
+                        </label>
+
+                        <div class="date-time-grid">
+
+                            <input
+                                type="date"
+                                class="form-input"
+                                name="due_date"
+                                required
+                            >
+
+                            <input
+                                type="time"
+                                class="form-input"
+                                name="due_time"
+                                required
+                            >
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="form-section">
+                <h2 class="section-title">Assignment File</h2>
+
+                <div class="form-group">
+
+                    <label class="form-label" for="file">
+                        Attachment
+                    </label>
+
+                    <input
+                        type="file"
+                        class="form-input file-input"
+                        id="file"
+                        name="file"
+                    >
+
+                    <span class="help-text">
+                        Optional. You can attach the assignment brief,
+                        instructions, PDF, document, or other relevant file.
+                    </span>
+
+                </div>
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{% url 'lecturers:dashboard' %}"
+                    class="button button-secondary"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="button button-primary"
+                    {% if not courses %}disabled{% endif %}
+                >
+                    Create Assignment
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+{% endblock %}

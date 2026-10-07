@@ -1,0 +1,479 @@
+{% extends "base.html" %}
+
+{% block title %}Post Announcement | LMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .announcement-page {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .announcement-header {
+        background: linear-gradient(135deg, #0b50e3 0%, #3b82f6 100%);
+        color: white;
+        border-radius: 16px;
+        padding: 28px 32px;
+        margin-bottom: 24px;
+        box-shadow: 0 10px 25px rgba(11, 80, 227, 0.15);
+    }
+
+    .announcement-header h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .announcement-header p {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 15px;
+    }
+
+    .announcement-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 32px;
+        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
+    }
+
+    .form-section {
+        margin-bottom: 28px;
+    }
+
+    .form-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-title {
+        margin: 0 0 18px;
+        color: #1e293b;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #334155;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .required {
+        color: #dc2626;
+    }
+
+    .form-control {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 9px;
+        background: #ffffff;
+        color: #1e293b;
+        font-size: 14px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #0b50e3;
+        box-shadow: 0 0 0 3px rgba(11, 80, 227, 0.10);
+    }
+
+    textarea.form-control {
+        min-height: 180px;
+        resize: vertical;
+        line-height: 1.6;
+    }
+
+    .audience-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .audience-option {
+        position: relative;
+    }
+
+    .audience-option input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .audience-label {
+        display: block;
+        padding: 16px;
+        border: 1px solid #dbe3ee;
+        border-radius: 10px;
+        background: #f8fafc;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .audience-label strong {
+        display: block;
+        margin-bottom: 4px;
+        color: #1e293b;
+        font-size: 14px;
+    }
+
+    .audience-label span {
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .audience-option input:checked + .audience-label {
+        border-color: #0b50e3;
+        background: #eff6ff;
+        box-shadow: 0 0 0 2px rgba(11, 80, 227, 0.08);
+    }
+
+    .course-field {
+        margin-top: 18px;
+        padding: 18px;
+        border-radius: 10px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+    }
+
+    .course-field.hidden {
+        display: none;
+    }
+
+    .pin-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        background: #f8fafc;
+        cursor: pointer;
+    }
+
+    .pin-option input {
+        width: 17px;
+        height: 17px;
+        accent-color: #0b50e3;
+        cursor: pointer;
+    }
+
+    .pin-option span {
+        color: #334155;
+        font-size: 14px;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        padding-top: 24px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 20px;
+        border-radius: 9px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-secondary {
+        background: #f1f5f9;
+        color: #334155;
+    }
+
+    .btn-secondary:hover {
+        background: #e2e8f0;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #0b50e3 0%, #3b82f6 100%);
+        color: white;
+        box-shadow: 0 5px 12px rgba(11, 80, 227, 0.18);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 7px 16px rgba(11, 80, 227, 0.25);
+    }
+
+    .empty-courses {
+        padding: 18px;
+        border-radius: 10px;
+        background: #eff6ff;
+        color: #1e40af;
+        border: 1px solid #bfdbfe;
+        font-size: 14px;
+    }
+
+    .help-text {
+        margin-top: 7px;
+        color: #64748b;
+        font-size: 12px;
+    }
+
+    @media (max-width: 700px) {
+        .announcement-card {
+            padding: 22px;
+        }
+
+        .announcement-header {
+            padding: 24px;
+        }
+
+        .audience-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-actions {
+            flex-direction: column-reverse;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="announcement-page">
+
+    <div class="announcement-header">
+        <h1>Post Announcement</h1>
+        <p>Share important information with students, lecturers, or a specific course.</p>
+    </div>
+
+    <div class="announcement-card">
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <div class="form-section">
+                <h2 class="section-title">Announcement Details</h2>
+
+                <div class="form-group">
+                    <label for="title">
+                        Announcement Title <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        class="form-control"
+                        maxlength="200"
+                        placeholder="e.g. Midterm Examination Announcement"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="content">
+                        Announcement Content <span class="required">*</span>
+                    </label>
+
+                    <textarea
+                        id="content"
+                        name="content"
+                        class="form-control"
+                        placeholder="Write the announcement here..."
+                        required
+                    ></textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Who Should See This?</h2>
+
+                <div class="audience-grid">
+
+                    <div class="audience-option">
+                        <input
+                            type="radio"
+                            id="audience-all"
+                            name="audience"
+                            value="all"
+                            checked
+                        >
+
+                        <label for="audience-all" class="audience-label">
+                            <strong>All Users</strong>
+                            <span>Everyone in the LMS</span>
+                        </label>
+                    </div>
+
+                    <div class="audience-option">
+                        <input
+                            type="radio"
+                            id="audience-students"
+                            name="audience"
+                            value="students"
+                        >
+
+                        <label for="audience-students" class="audience-label">
+                            <strong>Students Only</strong>
+                            <span>Only students can see this</span>
+                        </label>
+                    </div>
+
+                    <div class="audience-option">
+                        <input
+                            type="radio"
+                            id="audience-lecturers"
+                            name="audience"
+                            value="lecturers"
+                        >
+
+                        <label for="audience-lecturers" class="audience-label">
+                            <strong>Lecturers Only</strong>
+                            <span>Only lecturers can see this</span>
+                        </label>
+                    </div>
+
+                    <div class="audience-option">
+                        <input
+                            type="radio"
+                            id="audience-course"
+                            name="audience"
+                            value="course"
+                        >
+
+                        <label for="audience-course" class="audience-label">
+                            <strong>Specific Course</strong>
+                            <span>Students enrolled in a selected course</span>
+                        </label>
+                    </div>
+
+                </div>
+
+                <div id="course-field" class="course-field hidden">
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="course">
+                            Select Course <span class="required">*</span>
+                        </label>
+
+                        {% if courses %}
+                            <select
+                                id="course"
+                                name="course"
+                                class="form-control"
+                            >
+                                <option value="">Select a course</option>
+
+                                {% for course in courses %}
+                                    <option value="{{ course.pk }}">
+                                        {{ course.code }} - {{ course.title }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                            <div class="help-text">
+                                Only courses assigned to you are shown.
+                            </div>
+                        {% else %}
+                            <div class="empty-courses">
+                                You currently have no courses assigned to you.
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Announcement Options</h2>
+
+                <label class="pin-option" for="is_pinned">
+                    <input
+                        type="checkbox"
+                        id="is_pinned"
+                        name="is_pinned"
+                    >
+
+                    <span>
+                        Pin this announcement to the top of the announcement list
+                    </span>
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <a
+                    href="{% url 'lecturers:dashboard' %}"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Post Announcement
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const audienceOptions = document.querySelectorAll(
+        'input[name="audience"]'
+    );
+
+    const courseField = document.getElementById("course-field");
+    const courseSelect = document.getElementById("course");
+
+    function updateCourseField() {
+        const selectedAudience = document.querySelector(
+            'input[name="audience"]:checked'
+        );
+
+        if (selectedAudience && selectedAudience.value === "course") {
+            courseField.classList.remove("hidden");
+
+            if (courseSelect) {
+                courseSelect.required = true;
+            }
+        } else {
+            courseField.classList.add("hidden");
+
+            if (courseSelect) {
+                courseSelect.required = false;
+                courseSelect.value = "";
+            }
+        }
+    }
+
+    audienceOptions.forEach(function (option) {
+        option.addEventListener("change", updateCourseField);
+    });
+
+    updateCourseField();
+</script>
+{% endblock %}

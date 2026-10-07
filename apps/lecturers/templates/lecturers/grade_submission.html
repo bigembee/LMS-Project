@@ -1,0 +1,574 @@
+{% extends "base.html" %}
+
+{% block title %}Grade Submission{% endblock %}
+
+{% block extra_css %}
+<style>
+    .grading-page {
+        padding: 28px;
+        background: #f8fafc;
+        min-height: calc(100vh - 80px);
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #0b50e3 0%, #3b82f6 100%);
+        color: white;
+        border-radius: 16px;
+        padding: 26px 30px;
+        margin-bottom: 24px;
+        box-shadow: 0 8px 24px rgba(11, 80, 227, 0.18);
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        color: rgba(255, 255, 255, 0.88);
+        text-decoration: none;
+        font-size: 14px;
+        margin-bottom: 14px;
+    }
+
+    .back-link:hover {
+        color: white;
+    }
+
+    .page-header h1 {
+        margin: 0 0 7px;
+        font-size: 27px;
+        font-weight: 700;
+    }
+
+    .page-header p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.88);
+        font-size: 14px;
+    }
+
+    .grading-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.8fr);
+        gap: 24px;
+        align-items: start;
+    }
+
+    .card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
+        overflow: hidden;
+    }
+
+    .card-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .card-header h2 {
+        margin: 0;
+        color: #0f172a;
+        font-size: 18px;
+    }
+
+    .card-header p {
+        margin: 5px 0 0;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .card-body {
+        padding: 24px;
+    }
+
+    .student-section {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .student-avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0b50e3, #3b82f6);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .student-name {
+        margin: 0 0 3px;
+        color: #0f172a;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .student-email {
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+        margin-bottom: 22px;
+    }
+
+    .info-item {
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 14px;
+    }
+
+    .info-label {
+        color: #64748b;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+
+    .info-value {
+        color: #0f172a;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .submission-content {
+        margin-top: 22px;
+    }
+
+    .section-title {
+        color: #0f172a;
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .text-response {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 16px;
+        color: #334155;
+        font-size: 14px;
+        line-height: 1.65;
+        white-space: pre-wrap;
+    }
+
+    .file-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 15px;
+        background: #eff6ff;
+        color: #0b50e3;
+        border-radius: 9px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .file-link:hover {
+        background: #dbeafe;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        color: #0f172a;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .score-wrapper {
+        position: relative;
+    }
+
+    .score-input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 13px 70px 13px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 9px;
+        outline: none;
+        font-size: 15px;
+        color: #0f172a;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .score-input:focus,
+    .feedback-input:focus {
+        border-color: #0b50e3;
+        box-shadow: 0 0 0 3px rgba(11, 80, 227, 0.1);
+    }
+
+    .score-max {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #64748b;
+        font-size: 13px;
+        pointer-events: none;
+    }
+
+    .feedback-input {
+        width: 100%;
+        min-height: 150px;
+        box-sizing: border-box;
+        padding: 13px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 9px;
+        outline: none;
+        resize: vertical;
+        font-family: inherit;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #0f172a;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-hint {
+        margin-top: 6px;
+        color: #94a3b8;
+        font-size: 12px;
+    }
+
+    .button-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 24px;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 11px 18px;
+        border-radius: 9px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .btn-primary {
+        background: #0b50e3;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #0842ba;
+    }
+
+    .btn-secondary {
+        background: #f1f5f9;
+        color: #334155;
+    }
+
+    .btn-secondary:hover {
+        background: #e2e8f0;
+    }
+
+    .current-grade {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 22px;
+    }
+
+    .current-grade-title {
+        color: #0b50e3;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+
+    .current-grade-score {
+        color: #0f172a;
+        font-size: 23px;
+        font-weight: 700;
+    }
+
+    .current-grade-feedback {
+        margin-top: 8px;
+        color: #475569;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+        .grading-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .grading-page {
+            padding: 18px;
+        }
+
+        .page-header {
+            padding: 22px;
+        }
+
+        .page-header h1 {
+            font-size: 23px;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .button-row {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="grading-page">
+
+    <div class="page-header">
+        <a
+            href="{% url 'lecturers:view_submissions' assignment_id=submission.assignment.id %}"
+            class="back-link"
+        >
+            ← Back to Submissions
+        </a>
+
+        <h1>Grade Submission</h1>
+
+        <p>
+            {{ submission.assignment.title }}
+            · {{ submission.assignment.course.code }}
+        </p>
+    </div>
+
+    <div class="grading-layout">
+
+        <!-- Submission Details -->
+        <div class="card">
+
+            <div class="card-header">
+                <h2>Student Submission</h2>
+                <p>Review the student's work before assigning a score.</p>
+            </div>
+
+            <div class="card-body">
+
+                <div class="student-section">
+
+                    <div class="student-avatar">
+                        {{ submission.student.first_name|first|upper }}{{ submission.student.last_name|first|upper }}
+                    </div>
+
+                    <div>
+                        <div class="student-name">
+                            {{ submission.student.get_full_name|default:submission.student.username }}
+                        </div>
+
+                        <div class="student-email">
+                            {{ submission.student.email }}
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="info-grid">
+
+                    <div class="info-item">
+                        <div class="info-label">Assignment</div>
+                        <div class="info-value">
+                            {{ submission.assignment.title }}
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Maximum Score</div>
+                        <div class="info-value">
+                            {{ submission.assignment.max_score }}
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Submitted</div>
+                        <div class="info-value">
+                            {{ submission.submitted_at|date:"M d, Y g:i A" }}
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Status</div>
+                        <div class="info-value">
+                            {{ submission.get_status_display }}
+                        </div>
+                    </div>
+
+                </div>
+
+                {% if submission.file %}
+                    <div class="submission-content">
+
+                        <div class="section-title">
+                            Submitted File
+                        </div>
+
+                        <a
+                            href="{{ submission.file.url }}"
+                            target="_blank"
+                            class="file-link"
+                        >
+                            View / Download Submission
+                        </a>
+
+                    </div>
+                {% endif %}
+
+                {% if submission.text_response %}
+                    <div class="submission-content">
+
+                        <div class="section-title">
+                            Student Response
+                        </div>
+
+                        <div class="text-response">
+                            {{ submission.text_response }}
+                        </div>
+
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <!-- Grading Form -->
+        <div class="card">
+
+            <div class="card-header">
+                <h2>Assign Grade</h2>
+                <p>Enter the student's score and provide feedback.</p>
+            </div>
+
+            <div class="card-body">
+
+                {% if submission.grade %}
+
+                    <div class="current-grade">
+
+                        <div class="current-grade-title">
+                            Current Grade
+                        </div>
+
+                        <div class="current-grade-score">
+                            {{ submission.grade.score }}/{{ submission.assignment.max_score }}
+                        </div>
+
+                        {% if submission.grade.feedback %}
+                            <div class="current-grade-feedback">
+                                {{ submission.grade.feedback }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+                    <div class="form-group">
+
+                        <label for="score" class="form-label">
+                            Score
+                        </label>
+
+                        <div class="score-wrapper">
+
+                            <input
+                                type="number"
+                                id="score"
+                                name="score"
+                                class="score-input"
+                                min="0"
+                                max="{{ submission.assignment.max_score }}"
+                                step="0.01"
+                                value="{% if submission.grade %}{{ submission.grade.score }}{% endif %}"
+                                required
+                            >
+
+                            <span class="score-max">
+                                / {{ submission.assignment.max_score }}
+                            </span>
+
+                        </div>
+
+                        <div class="form-hint">
+                            Enter a score between 0 and {{ submission.assignment.max_score }}.
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="feedback" class="form-label">
+                            Feedback
+                        </label>
+
+                        <textarea
+                            id="feedback"
+                            name="feedback"
+                            class="feedback-input"
+                            placeholder="Enter feedback for the student..."
+                        >{% if submission.grade %}{{ submission.grade.feedback }}{% endif %}</textarea>
+
+                    </div>
+
+                    <div class="button-row">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Save Grade
+                        </button>
+
+                        <a
+                            href="{% url 'lecturers:view_submissions' assignment_id=submission.assignment.id %}"
+                            class="btn btn-secondary"
+                        >
+                            Cancel
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

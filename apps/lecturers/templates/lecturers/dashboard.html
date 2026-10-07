@@ -1,6 +1,900 @@
 {% extends "base.html" %}
 
+{% block title %}Lecturer Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* =========================================================
+       EDVANCE LECTURER DASHBOARD
+       Primary brand colour: #0b50e3
+       All styling is local to this dashboard.
+       ========================================================= */
+
+    :root {
+        --dashboard-blue: #0b50e3;
+        --dashboard-blue-dark: #0842ba;
+        --dashboard-blue-medium: #3b82f6;
+        --dashboard-blue-light: #93c5fd;
+        --dashboard-blue-pale: #eff6ff;
+        --dashboard-blue-soft: #eaf2ff;
+        --dashboard-gradient: linear-gradient(
+            135deg,
+            #0b50e3 0%,
+            #3b82f6 100%
+        );
+        --dashboard-light-gradient: linear-gradient(
+            135deg,
+            #eff6ff 0%,
+            #dbeafe 100%
+        );
+    }
+
+    /* =========================================================
+       DASHBOARD HEADER
+       ========================================================= */
+
+    .dashboard-header {
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 28px 30px;
+        margin-bottom: 24px;
+        border-radius: 14px;
+        color: #ffffff;
+        background: var(--dashboard-gradient);
+        box-shadow: 0 10px 25px rgba(11, 80, 227, 0.18);
+    }
+
+    .dashboard-header::after {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        right: -80px;
+        top: -110px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .dashboard-header-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .dashboard-header h1 {
+        margin-bottom: 5px;
+        font-size: 1.9rem;
+        font-weight: 700;
+    }
+
+    .dashboard-header p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    /* =========================================================
+       WELCOME CARD
+       ========================================================= */
+
+    .welcome-card {
+        position: relative;
+        overflow: hidden;
+        padding: 22px 24px;
+        margin-bottom: 24px;
+        border: 1px solid #dbeafe;
+        border-radius: 12px;
+        background: var(--dashboard-light-gradient);
+    }
+
+    .welcome-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 5px;
+        background: var(--dashboard-blue);
+    }
+
+    .welcome-card h2 {
+        margin-bottom: 4px;
+        color: #0f172a;
+        font-size: 1.25rem;
+    }
+
+    .welcome-card p {
+        color: #475569;
+        margin: 0;
+    }
+
+    /* =========================================================
+       STAT CARDS
+       ========================================================= */
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        position: relative;
+        overflow: hidden;
+        padding: 21px;
+        border: 1px solid #dbeafe;
+        border-radius: 12px;
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(11, 80, 227, 0.06);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 22px rgba(11, 80, 227, 0.12);
+    }
+
+    .stat-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--dashboard-gradient);
+    }
+
+    .stat-label {
+        margin-bottom: 8px;
+        color: #64748b;
+        font-size: 0.84rem;
+        font-weight: 500;
+    }
+
+    .stat-value {
+        color: var(--dashboard-blue);
+        font-size: 1.9rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    /* =========================================================
+       MAIN DASHBOARD GRID
+       ========================================================= */
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+
+    /* =========================================================
+       SECTION CARDS
+       ========================================================= */
+
+    .section-card {
+        padding: 21px;
+        margin-bottom: 20px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: #ffffff;
+        box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
+    }
+
+    .section-card h2 {
+        position: relative;
+        padding-bottom: 10px;
+        margin-bottom: 17px;
+        color: #0f172a;
+        font-size: 1.08rem;
+        font-weight: 700;
+    }
+
+    .section-card h2::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 38px;
+        height: 3px;
+        border-radius: 5px;
+        background: var(--dashboard-gradient);
+    }
+
+    /* =========================================================
+       COURSE CARDS
+       ========================================================= */
+
+    .courses-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .course-card {
+        position: relative;
+        overflow: hidden;
+        padding: 17px;
+        border: 1px solid #dbeafe;
+        border-radius: 10px;
+        background: linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #f8fbff 100%
+        );
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .course-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(11, 80, 227, 0.1);
+    }
+
+    .course-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: var(--dashboard-gradient);
+    }
+
+    .course-code {
+        color: var(--dashboard-blue);
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+    }
+
+    .course-title {
+        margin: 5px 0 6px;
+        color: #1e293b;
+        font-weight: 600;
+    }
+
+    .course-meta {
+        margin-bottom: 12px;
+        color: #64748b;
+        font-size: 0.82rem;
+    }
+
+    /* =========================================================
+       PROGRESS BARS
+       ========================================================= */
+
+    .progress-bar {
+        height: 8px;
+        margin-bottom: 6px;
+        overflow: hidden;
+        border-radius: 20px;
+        background: #dbeafe;
+    }
+
+    .progress-fill {
+        height: 100%;
+        border-radius: 20px;
+        background: var(--dashboard-gradient);
+    }
+
+    .progress-text {
+        color: #64748b;
+        font-size: 0.78rem;
+    }
+
+    /* =========================================================
+       TABLE
+       ========================================================= */
+
+    .dashboard-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .dashboard-table th,
+    .dashboard-table td {
+        padding: 12px 8px;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+        font-size: 0.88rem;
+    }
+
+    .dashboard-table th {
+        color: #64748b;
+        background: #f8fbff;
+        font-weight: 600;
+    }
+
+    .dashboard-table td {
+        color: #334155;
+    }
+
+    .dashboard-table tbody tr:hover {
+        background: #f8fbff;
+    }
+
+    .dashboard-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* =========================================================
+       SCHEDULE
+       ========================================================= */
+
+    .schedule-item {
+        position: relative;
+        padding: 13px 0 13px 15px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .schedule-item::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 16px;
+        width: 4px;
+        height: 34px;
+        border-radius: 5px;
+        background: var(--dashboard-gradient);
+    }
+
+    .schedule-item:last-child {
+        border-bottom: none;
+    }
+
+    .schedule-time {
+        margin-bottom: 2px;
+        color: var(--dashboard-blue);
+        font-size: 0.82rem;
+        font-weight: 700;
+    }
+
+    .item-title {
+        color: #1e293b;
+        font-weight: 600;
+    }
+
+    .item-meta {
+        color: #64748b;
+        font-size: 0.8rem;
+    }
+
+    /* =========================================================
+       ANNOUNCEMENTS & MESSAGES
+       ========================================================= */
+
+    .announcement-item,
+    .message-item {
+        position: relative;
+        padding: 13px 0 13px 15px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .announcement-item::before,
+    .message-item::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 18px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--dashboard-blue);
+        box-shadow: 0 0 0 4px #dbeafe;
+    }
+
+    .announcement-item:last-child,
+    .message-item:last-child {
+        border-bottom: none;
+    }
+
+    /* =========================================================
+       PERFORMANCE BARS
+       ========================================================= */
+
+    .performance-item {
+        margin-bottom: 17px;
+    }
+
+    .performance-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .performance-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 6px;
+        color: #334155;
+        font-size: 0.84rem;
+        font-weight: 500;
+    }
+
+    .performance-header span:last-child {
+        color: var(--dashboard-blue);
+        font-weight: 700;
+    }
+
+    .performance-bar {
+        height: 10px;
+        overflow: hidden;
+        border-radius: 20px;
+        background: #dbeafe;
+    }
+
+    .performance-fill {
+        height: 100%;
+        border-radius: 20px;
+        background: var(--dashboard-gradient);
+    }
+
+    /* =========================================================
+       RINGS
+       ========================================================= */
+
+    .ring-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 20px;
+        text-align: center;
+    }
+
+    .ring {
+        width: 118px;
+        height: 118px;
+        padding: 5px;
+        border-radius: 50%;
+        background: conic-gradient(
+            #0b50e3 0deg,
+            #3b82f6 {{ ring_degrees }}deg,
+            #dbeafe {{ ring_degrees }}deg,
+            #eff6ff 360deg
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ring-inner {
+        width: 94px;
+        height: 94px;
+        border-radius: 50%;
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-shadow: inset 0 0 0 1px #e2e8f0;
+    }
+
+    .ring-value {
+        color: var(--dashboard-blue);
+        font-size: 1.15rem;
+        font-weight: 700;
+    }
+
+    .ring-label {
+        margin-top: 2px;
+        color: #64748b;
+        font-size: 0.72rem;
+    }
+
+    /* =========================================================
+       EMPTY STATES
+       ========================================================= */
+
+    .section-card p {
+        color: #64748b;
+    }
+
+    /* =========================================================
+       RESPONSIVE DESIGN
+       ========================================================= */
+
+    @media (max-width: 1100px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .dashboard-header {
+            padding: 22px;
+        }
+
+        .dashboard-header h1 {
+            font-size: 1.5rem;
+        }
+
+        .stats-grid,
+        .courses-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-table {
+            display: block;
+            overflow-x: auto;
+        }
+
+        .ring-container {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+
 {% block content %}
-  <h1>Dashboard</h1>
-  <p>Welcome to your dashboard!</p>
+
+<!-- =========================================================
+     DASHBOARD HEADER
+     ========================================================= -->
+
+<div class="dashboard-header">
+    <div class="dashboard-header-content">
+        <h1>Lecturer Dashboard</h1>
+        <p>Manage your teaching activities, courses and students.</p>
+    </div>
+</div>
+
+
+<!-- =========================================================
+     WELCOME MESSAGE
+     ========================================================= -->
+
+<div class="welcome-card">
+    <h2>
+        Welcome{% if user.first_name %}, {{ user.first_name }}{% endif %}!
+    </h2>
+
+    <p>
+        Here is a summary of your courses, students, submissions and activities.
+    </p>
+</div>
+
+
+<!-- =========================================================
+     STAT CARDS
+     ========================================================= -->
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-label">Total Courses</div>
+        <div class="stat-value">{{ total_courses }}</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-label">Total Students</div>
+        <div class="stat-value">{{ total_students }}</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-label">Pending Submissions</div>
+        <div class="stat-value">{{ pending_count }}</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-label">Unread Messages</div>
+        <div class="stat-value">{{ unread_messages }}</div>
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     MAIN DASHBOARD CONTENT
+     ========================================================= -->
+
+<div class="dashboard-grid">
+
+    <!-- =====================================================
+         LEFT COLUMN
+         ===================================================== -->
+
+    <div>
+
+        <!-- MY COURSES -->
+
+        <div class="section-card">
+
+            <h2>My Courses</h2>
+
+            <div class="courses-grid">
+
+                {% for course in courses %}
+
+                <div class="course-card">
+
+                    <div class="course-code">
+                        {{ course.code }}
+                    </div>
+
+                    <div class="course-title">
+                        {{ course.title }}
+                    </div>
+
+                    <div class="course-meta">
+                        {{ course.students }} students
+                        · Next class: {{ course.next_class }}
+                    </div>
+
+                    <div class="progress-bar">
+                        <div
+                            class="progress-fill"
+                            style="width: {{ course.progress }}%;">
+                        </div>
+                    </div>
+
+                    <div class="progress-text">
+                        {{ course.progress }}% course progress
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <p>No courses assigned.</p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- SUBMISSIONS -->
+
+        <div class="section-card">
+
+            <h2>Submissions Waiting to be Graded</h2>
+
+            <table class="dashboard-table">
+
+                <thead>
+                    <tr>
+                        <th>Assignment</th>
+                        <th>Course</th>
+                        <th>Submitted</th>
+                        <th>Due</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for submission in submissions %}
+
+                    <tr>
+                        <td>{{ submission.title }}</td>
+                        <td>{{ submission.course }}</td>
+                        <td>
+                            {{ submission.submitted }}/{{ submission.total }}
+                        </td>
+                        <td>{{ submission.due }}</td>
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="4">
+                            No pending submissions.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- PERFORMANCE -->
+
+        <div class="section-card">
+
+            <h2>Average Score per Course</h2>
+
+            {% for item in performance %}
+
+            <div class="performance-item">
+
+                <div class="performance-header">
+                    <span>{{ item.label }}</span>
+                    <span>{{ item.value }}%</span>
+                </div>
+
+                <div class="performance-bar">
+                    <div
+                        class="performance-fill"
+                        style="width: {{ item.value }}%;">
+                    </div>
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <p>No performance data available.</p>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RIGHT COLUMN
+         ===================================================== -->
+
+    <div>
+
+        <!-- TEACHING HOURS -->
+
+        <div class="section-card">
+
+            <h2>Teaching Hours & Attendance</h2>
+
+            <div class="ring-container">
+
+                <div>
+
+                    <div class="ring">
+                        <div class="ring-inner">
+
+                            <div class="ring-value">
+                                {{ teaching_hours }}
+                            </div>
+
+                            <div class="ring-label">
+                                Teaching
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <div
+                        class="ring"
+                        style="
+                            background: conic-gradient(
+                                #0b50e3 0deg,
+                                #3b82f6 {{ attendance_rate|floatformat:0 }}deg,
+                                #dbeafe {{ attendance_rate|floatformat:0 }}deg,
+                                #eff6ff 360deg
+                            );
+                        "
+                    >
+
+                        <div class="ring-inner">
+
+                            <div class="ring-value">
+                                {{ attendance_rate }}%
+                            </div>
+
+                            <div class="ring-label">
+                                Attendance
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- TODAY'S SCHEDULE -->
+
+        <div class="section-card">
+
+            <h2>Today's Schedule</h2>
+
+            {% for item in schedule %}
+
+            <div class="schedule-item">
+
+                <div class="schedule-time">
+                    {{ item.start }} - {{ item.end }}
+                </div>
+
+                <div class="item-title">
+                    {{ item.title }}
+                </div>
+
+                <div class="item-meta">
+                    {{ item.course }} · {{ item.room }}
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <p>No classes scheduled.</p>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- ANNOUNCEMENTS -->
+
+        <div class="section-card">
+
+            <h2>Announcements</h2>
+
+            {% for announcement in announcements %}
+
+            <div class="announcement-item">
+
+                <div class="item-title">
+                    {{ announcement.title }}
+                </div>
+
+                <div class="item-meta">
+                    {{ announcement.course }} · {{ announcement.when }}
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <p>No announcements.</p>
+
+            {% endfor %}
+
+        </div>
+
+
+       <!-- RECENT MESSAGES -->
+
+<div class="section-card">
+
+    <h2>Recent Messages</h2>
+
+    {% for message in recent_messages %}
+
+    <div class="message-item">
+
+        <div class="item-title">
+            {{ message.sender.get_full_name|default:message.sender.username }}
+        </div>
+
+        <div class="item-meta">
+            <strong>{{ message.subject }}</strong>
+            · {{ message.created_at|date:"M d, Y H:i" }}
+        </div>
+
+        <div class="item-preview">
+            {{ message.body|truncatechars:80 }}
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <p>No recent messages.</p>
+
+    {% endfor %}
+
+</div>
+
+</div>
+
 {% endblock %}
