@@ -1,43 +1,54 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}Manage Departments{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'administration/admin.css' %}">
+{% endblock %}
+
 {% block content %}
-<h1>Manage Departments</h1>
+<div class="admin-dashboard">
+    <h1>Manage Departments</h1>
 
-<h2>Add New Department</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add Department</button>
-</form>
+    <h2>Add New Department</h2>
+    <form method="post" class="admin-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="admin-btn">Add Department</button>
+    </form>
 
-<table>
-    <thead>
-        <tr>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Head</th>
-            <th>Description</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for department in departments %}
-        <tr>
-            <td>{{ department.code }}</td>
-            <td>{{ department.name }}</td>
-            <td>{{ department.head|default:"—" }}</td>
-            <td>{{ department.description|default:"—" }}</td>
-            <td>
-                <a href="{% url 'administration:edit_department' department.id %}">Edit</a>
-                |
-                <a href="{% url 'administration:delete_department' department.id %}">Delete</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="5">No departments found.</td></tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <div class="admin-table-wrapper">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Head</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for department in departments %}
+            <tr>
+                <td>{{ department.code }}</td>
+                <td>{{ department.name }}</td>
+                <td>{{ department.head|default:"—" }}</td>
+                <td>{{ department.description|default:"—" }}</td>
+                <td>
+                    <a class="admin-link" href="{% url 'administration:edit_department' department.id %}">Edit</a>
+                    ·
+                    <a class="admin-link" href="{% url 'administration:delete_department' department.id %}">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No departments found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
 
-<p><a href="{% url 'administration:dashboard' %}">&larr; Back to Dashboard</a></p>
+    <p class="back-link"><a class="admin-link" href="{% url 'administration:dashboard' %}">&larr; Back to Dashboard</a></p>
+</div>
 {% endblock %}

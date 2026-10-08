@@ -1,13 +1,22 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}Delete Session{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'administration/admin.css' %}">
+{% endblock %}
+
 {% block content %}
-<h1>Delete Session</h1>
-<p>Are you sure you want to delete <strong>{{ session.name }}</strong>? This will also delete its semesters. This cannot be undone.</p>
+<div class="admin-dashboard">
+    <h1>Delete Session</h1>
+    <p>Are you sure you want to delete <strong>{{ session.name }}</strong>? This will also delete its semesters. This cannot be undone.</p>
 
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Yes, Delete</button>
-</form>
+    <form method="post" class="admin-form">
+        {% csrf_token %}
+        <button type="submit" class="admin-btn admin-btn--danger">Yes, Delete</button>
+    </form>
 
-<p><a href="{% url 'administration:manage_sessions' %}">&larr; Cancel</a></p>
+    <p class="back-link"><a class="admin-link" href="{% url 'administration:manage_sessions' %}">&larr; Cancel</a></p>
+</div>
 {% endblock %}

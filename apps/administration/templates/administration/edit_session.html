@@ -1,13 +1,22 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}Edit Session{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'administration/admin.css' %}">
+{% endblock %}
+
 {% block content %}
-<h1>Edit Session: {{ session.name }}</h1>
+<div class="admin-dashboard">
+    <h1>Edit Session: {{ session.name }}</h1>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Changes</button>
-</form>
+    <form method="post" class="admin-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="admin-btn">Save Changes</button>
+    </form>
 
-<p><a href="{% url 'administration:manage_sessions' %}">&larr; Back to Sessions</a></p>
+    <p class="back-link"><a class="admin-link" href="{% url 'administration:manage_sessions' %}">&larr; Back to Sessions</a></p>
+</div>
 {% endblock %}

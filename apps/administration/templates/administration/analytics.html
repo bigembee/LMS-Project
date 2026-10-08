@@ -1,58 +1,154 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}Analytics{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'administration/admin.css' %}">
+{% endblock %}
+
 {% block content %}
-<h1>Analytics</h1>
+<div class="admin-dashboard">
+    <h1>Analytics</h1>
 
-<h2>Students per Department</h2>
-<table>
-    <thead><tr><th>Department</th><th>Students</th></tr></thead>
-    <tbody>
-        {% for dept in students_per_department %}
-        <tr><td>{{ dept.name }}</td><td>{{ dept.student_count }}</td></tr>
-        {% empty %}
-        <tr><td colspan="2">No data.</td></tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));">
 
-<h2>Courses per Department</h2>
-<table>
-    <thead><tr><th>Department</th><th>Courses</th></tr></thead>
-    <tbody>
-        {% for dept in courses_per_department %}
-        <tr><td>{{ dept.name }}</td><td>{{ dept.course_count }}</td></tr>
-        {% empty %}
-        <tr><td colspan="2">No data.</td></tr>
-        {% endfor %}
-    </tbody>
-</table>
+        <div class="session-card">
+            <h2>Students per Department</h2>
+            <canvas id="studentsChart"></canvas>
+            <div class="admin-table-wrapper" style="margin-top:1rem;">
+            <table class="admin-table">
+                <thead><tr><th>Department</th><th>Students</th></tr></thead>
+                <tbody>
+                    {% for dept in students_per_department %}
+                    <tr><td>{{ dept.name }}</td><td>{{ dept.student_count }}</td></tr>
+                    {% empty %}
+                    <tr><td colspan="2">No data.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
 
-<h2>Enrollment Status Breakdown</h2>
-<table>
-    <thead><tr><th>Status</th><th>Total</th></tr></thead>
-    <tbody>
-        {% for row in enrollment_status_counts %}
-        <tr><td>{{ row.status }}</td><td>{{ row.total }}</td></tr>
-        {% empty %}
-        <tr><td colspan="2">No data.</td></tr>
-        {% endfor %}
-    </tbody>
-</table>
+        <div class="session-card">
+            <h2>Courses per Department</h2>
+            <canvas id="coursesChart"></canvas>
+            <div class="admin-table-wrapper" style="margin-top:1rem;">
+            <table class="admin-table">
+                <thead><tr><th>Department</th><th>Courses</th></tr></thead>
+                <tbody>
+                    {% for dept in courses_per_department %}
+                    <tr><td>{{ dept.name }}</td><td>{{ dept.course_count }}</td></tr>
+                    {% empty %}
+                    <tr><td colspan="2">No data.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
 
-<h2>Average Score per Course</h2>
-<table>
-    <thead><tr><th>Course</th><th>Average Score</th></tr></thead>
-    <tbody>
-        {% for course in average_score_per_course %}
-        <tr>
-            <td>{{ course.code }} - {{ course.title }}</td>
-            <td>{% if course.avg_score %}{{ course.avg_score|floatformat:2 }}{% else %}No grades yet{% endif %}</td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="2">No courses found.</td></tr>
-        {% endfor %}
-    </tbody>
-</table>
+        <div class="session-card">
+            <h2>Enrollment Status Breakdown</h2>
+            <canvas id="enrollmentChart"></canvas>
+            <div class="admin-table-wrapper" style="margin-top:1rem;">
+            <table class="admin-table">
+                <thead><tr><th>Status</th><th>Total</th></tr></thead>
+                <tbody>
+                    {% for row in enrollment_status_counts %}
+                    <tr><td>{{ row.status }}</td><td>{{ row.total }}</td></tr>
+                    {% empty %}
+                    <tr><td colspan="2">No data.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
 
-<p><a href="{% url 'administration:dashboard' %}">&larr; Back to Dashboard</a></p>
+        <div class="session-card">
+            <h2>Average Score per Course</h2>
+            <canvas id="scoreChart"></canvas>
+            <div class="admin-table-wrapper" style="margin-top:1rem;">
+            <table class="admin-table">
+                <thead><tr><th>Course</th><th>Average Score</th></tr></thead>
+                <tbody>
+                    {% for course in average_score_per_course %}
+                    <tr>
+                        <td>{{ course.code }} - {{ course.title }}</td>
+                        <td>{% if course.avg_score %}{{ course.avg_score|floatformat:2 }}{% else %}No grades yet{% endif %}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="2">No courses found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+    </div>
+
+    <p class="back-link"><a class="admin-link" href="{% url 'administration:dashboard' %}">&larr; Back to Dashboard</a></p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+    // Students per department — bar chart
+    new Chart(document.getElementById('studentsChart'), {
+        type: 'bar',
+        data: {
+            labels: [{% for dept in students_per_department %}"{{ dept.name|escapejs }}",{% endfor %}],
+            datasets: [{
+                data: [{% for dept in students_per_department %}{{ dept.student_count }},{% endfor %}],
+                backgroundColor: '#2563eb',
+                borderRadius: 6,
+            }]
+        },
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+    });
+
+    // Courses per department — bar chart
+    new Chart(document.getElementById('coursesChart'), {
+        type: 'bar',
+        data: {
+            labels: [{% for dept in courses_per_department %}"{{ dept.name|escapejs }}",{% endfor %}],
+            datasets: [{
+                data: [{% for dept in courses_per_department %}{{ dept.course_count }},{% endfor %}],
+                backgroundColor: '#1d4ed8',
+                borderRadius: 6,
+            }]
+        },
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+    });
+
+    // Enrollment status — pie chart
+    new Chart(document.getElementById('enrollmentChart'), {
+        type: 'pie',
+        data: {
+            labels: [{% for row in enrollment_status_counts %}"{{ row.status|escapejs }}",{% endfor %}],
+            datasets: [{
+                data: [{% for row in enrollment_status_counts %}{{ row.total }},{% endfor %}],
+                backgroundColor: ['#2563eb', '#f59e0b', '#16a34a', '#dc2626'],
+            }]
+        }
+    });
+
+    // Average score per course — horizontal bar chart
+    new Chart(document.getElementById('scoreChart'), {
+        type: 'bar',
+        data: {
+            labels: [{% for course in average_score_per_course %}"{{ course.code|escapejs }}",{% endfor %}],
+            datasets: [{
+                data: [{% for course in average_score_per_course %}{{ course.avg_score|default:0 }},{% endfor %}],
+                backgroundColor: '#60a5fa',
+                borderRadius: 6,
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            plugins: { legend: { display: false } },
+            scales: { x: { beginAtZero: true, max: 100 } }
+        }
+    });
+</script>
 {% endblock %}
