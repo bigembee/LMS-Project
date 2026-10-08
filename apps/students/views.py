@@ -27,11 +27,17 @@ FLOW EXAMPLE (student views their grades):
     6. HTML is returned to the browser
 """
 
+import json
+from pathlib import Path
+
 from django.shortcuts import render
+from django.shortcuts import redirect
+from django.contrib import messages
 
 # Import the decorator from the accounts app — it checks that the user is a student
 from apps.accounts.decorators import student_required
-from apps.assignments.models import Assignment, Submission
+from .forms import StudentAcademicProfileForm, StudentContactForm
+from .models import StudentProfile
 
 
 @student_required
@@ -46,11 +52,40 @@ def dashboard(request):
         - Notifications
 
     URL: /students/dashboard/
-    TEMPLATE: students/dashboard.html
+    TEMPLATE: students/student.html
 
     TODO: Implement — query enrolled courses, upcoming assignments, recent grades
     """
-    return render(request, "students/dashboard.html")
+    student_name = request.user.get_full_name().strip() or request.user.get_username()
+    return render(request, "students/student.html", {"student_name": student_name})
+
+
+@student_required
+def profile(request):
+    student_profile, _ = StudentProfile.objects.get_or_create(user=request.user)
+    catalog_path = Path(__file__).with_name("data") / "nigerian_universities.json"
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    contact_form = StudentContactForm(request.POST or None, instance=request.user)
+    academic_form = StudentAcademicProfileForm(
+        request.POST or None,
+        instance=student_profile,
+        catalog=catalog,
+    )
+
+    if request.method == "POST":
+        contact_valid = contact_form.is_valid()
+        academic_valid = academic_form.is_valid()
+        if contact_valid and academic_valid:
+            contact_form.save()
+            academic_form.save()
+            messages.success(request, "Your profile has been updated.")
+            return redirect("students:profile")
+
+    return render(request, "students/profile.html", {
+        "contact_form": contact_form,
+        "academic_form": academic_form,
+        "university_catalog": catalog,
+    })
 
 
 @student_required
@@ -116,25 +151,21 @@ def my_assignments(request):
         # Get all assignments from those courses
         assignments = Assignment.objects.filter(course_id__in=enrolled_course_ids)
     """
-    enrolled_course_ids = request.user.enrollments.filter(
-        status="enrolled"
-    ).values_list("course_id", flat=True)
-    
-    assignments = Assignment.objects.filter(course_id__in=enrolled_course_ids)
-
-    return render(request, "students/my_assignments.html", {"assignments": assignments})
+    return render(request, "students/my_assignments.html")
 
 
 @student_required
 def my_grades(request):
-    submissions = (
-        Submission.objects
-        .filter(student=request.user, status="graded")
-        .select_related("grade", "assignment", "assignment__course")
-    )
+    """
+    View the student's grades and results for all submitted assignments.
 
-    context = {"submissions": submissions}
-    return render(request, "students/my_grades.html", context)
+    URL: /students/grades/
+
+    TODO: Implement:
+        submissions = Submission.objects.filter(student=request.user, status="graded")
+            .select_related("grade", "assignment", "assignment__course")
+    """
+    return render(request, "students/my_grades.html")
 
 
 @student_required
@@ -171,4 +202,3 @@ def maps(request):
     URL: /students/maps/
     """
     return render(request, "students/maps.html")
-

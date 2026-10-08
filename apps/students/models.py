@@ -36,14 +36,23 @@ class StudentProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="student_profile")
 
     # The student's matric/registration number — unique across all students
-    student_id = models.CharField(max_length=20, unique=True)
+    student_id = models.CharField(max_length=20, unique=True, null=True, blank=True)
 
     # Which department the student belongs to
     # String "courses.Department" avoids circular imports
-    department = models.ForeignKey("courses.Department", on_delete=models.SET_NULL, null=True)
+    department = models.ForeignKey("courses.Department", on_delete=models.SET_NULL, null=True, blank=True)
 
     # Academic level: 100 (year 1), 200 (year 2), 300 (year 3), etc.
     level = models.PositiveIntegerField(default=100)
+
+    institution = models.CharField(max_length=200, blank=True)
+    faculty_name = models.CharField(max_length=200, blank=True)
+    academic_department = models.CharField(max_length=200, blank=True)
+    sex = models.CharField(
+        max_length=20,
+        blank=True,
+        choices=[("female", "Female"), ("male", "Male"), ("other", "Other"), ("prefer_not_to_say", "Prefer not to say")],
+    )
 
     # When the student was admitted to the school
     admission_date = models.DateField(null=True, blank=True)

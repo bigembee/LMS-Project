@@ -12,10 +12,10 @@ from .models import StudentProfile
 @admin.register(StudentProfile)
 class StudentProfileAdmin(admin.ModelAdmin):
     # Columns shown in the student profile list
-    list_display = ["student_id", "user", "department", "level"]
+    list_display = ["student_id", "user", "institution", "faculty_name", "academic_department", "level"]
 
     # Sidebar filters — filter students by department or level
-    list_filter = ["department", "level"]
+    list_filter = ["institution", "faculty_name", "level"]
 
     # Search bar — search by student ID, first name, or last name
     # user__first_name traverses: StudentProfile → User → first_name
