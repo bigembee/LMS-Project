@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('lecturers', '0001_initial'),
-        ('courses', '0001_initial'),
+        ('courses', '0002_lecture'),
     ]
 
     operations = [
@@ -30,22 +30,7 @@ class Migration(migrations.Migration):
                 'ordering': ['order'],
             },
         ),
-        migrations.CreateModel(
-            name='Lecture',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200)),
-                ('description', models.TextField(blank=True)),
-                ('video_url', models.URLField(blank=True, help_text='Link to lecture video (e.g. YouTube, Vimeo)')),
-                ('order', models.PositiveIntegerField(default=1)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='lectures', to='courses.course')),
-            ],
-            options={
-                'ordering': ['order', 'created_at'],
-            },
-        ),
+        
         migrations.CreateModel(
             name='CourseMaterial',
             fields=[
